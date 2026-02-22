@@ -185,35 +185,37 @@ export default function ProductPage() {
             </div>
 
             {/* Quantity + Add to Cart */}
-            <div className="flex items-center gap-4 mb-8">
-              <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-3.5 py-2.5 text-gray-500 hover:bg-gray-50 transition-colors"
-                >
-                  <Minus size={16} />
-                </button>
-                <span className="px-4 py-2.5 font-semibold text-[#2d2016] min-w-[3rem] text-center">
-                  {quantity}
-                </span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="px-3.5 py-2.5 text-gray-500 hover:bg-gray-50 transition-colors"
-                >
-                  <Plus size={16} />
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-8">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="px-3.5 py-2.5 text-gray-500 hover:bg-gray-50 transition-colors"
+                  >
+                    <Minus size={16} />
+                  </button>
+                  <span className="px-4 py-2.5 font-semibold text-[#2d2016] min-w-[3rem] text-center">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="px-3.5 py-2.5 text-gray-500 hover:bg-gray-50 transition-colors"
+                  >
+                    <Plus size={16} />
+                  </button>
+                </div>
+
+                <button className="p-3 border-2 border-gray-200 rounded-xl hover:border-red-300 hover:text-red-400 transition-colors text-gray-400">
+                  <HeartIcon size={18} />
                 </button>
               </div>
 
               <button
                 onClick={handleAddToCart}
-                className="flex-1 px-6 py-3 bg-[#2d2016] text-white font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-[#1a120d] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                className="w-full sm:w-auto sm:flex-1 px-6 py-3 bg-[#2d2016] text-white font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-[#1a120d] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
               >
                 <ShoppingCart size={18} />
                 Add to Cart
-              </button>
-
-              <button className="p-3 border-2 border-gray-200 rounded-xl hover:border-red-300 hover:text-red-400 transition-colors text-gray-400">
-                <HeartIcon size={18} />
               </button>
             </div>
 

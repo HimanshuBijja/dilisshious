@@ -47,7 +47,7 @@ export const products: Product[] = [
     slug: "strawberry-cheesecake-jar",
     name: "Strawberry Cheesecake Jar",
     tagline: "Gentle indulgence in every spoon.",
-    category: "Dessert Jars · V/GF",
+    category: "Dessert Jars",
     image: "/images/strawberry-cheesecake-jar-05.png",
     volumes: [
       { label: "Pack of 4", price: 399, originalPrice: 449 },
@@ -68,7 +68,7 @@ export const products: Product[] = [
     slug: "strawberry-dipped-chocolate",
     name: "Strawberry-Dipped Chocolate",
     tagline: "Playful, romantic, and just indulgent enough.",
-    category: "Chocolates · V/GF",
+    category: "Chocolates",
     image: "/images/chocolate-dipped-strawberries.png",
     volumes: [
       { label: "Pack of 4", price: 349, originalPrice: 399 },
