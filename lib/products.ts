@@ -62,7 +62,7 @@ export const products: Product[] = [
     bestBefore: "3 days from date of manufacture",
     deliveryDetails:
       "We deliver on Wednesdays and Sundays. Orders placed before 8 PM the previous day will be delivered on the next delivery day. Perishable — handle with care.",
-    tags: ["V/GF"],
+    tags: ["Bestseller"],
   },
   {
     slug: "strawberry-dipped-chocolate",
@@ -83,7 +83,7 @@ export const products: Product[] = [
     bestBefore: "3 days from preparation",
     deliveryDetails:
       "We deliver on Wednesdays and Sundays. Perishable item — delivered in insulated packaging. Please refrigerate immediately upon receipt.",
-    tags: ["V/GF", "Fresh"],
+    tags: ["Fresh"],
   },
   {
     slug: "moringa-dust",
