@@ -26,7 +26,7 @@ export const products: Product[] = [
     name: "Gourmet Brown Butter Cookies",
     tagline: "Crisp edges. Soft centre. Worth every bite.",
     category: "Cookies",
-    image: "/images/cookie.png",
+    image: "/images/cookie-01.png",
     volumes: [
       { label: "Pack of 4", price: 299, originalPrice: 349 },
       { label: "Pack of 8", price: 549, originalPrice: 649 },
@@ -48,7 +48,7 @@ export const products: Product[] = [
     name: "Strawberry Cheesecake Jar",
     tagline: "Gentle indulgence in every spoon.",
     category: "Dessert Jars · V/GF",
-    image: "/images/strawberry.png",
+    image: "/images/strawberry-cheesecake-jar-05.png",
     volumes: [
       { label: "Pack of 4", price: 399, originalPrice: 449 },
       { label: "Pack of 8", price: 749, originalPrice: 849 },
@@ -69,7 +69,7 @@ export const products: Product[] = [
     name: "Strawberry-Dipped Chocolate",
     tagline: "Playful, romantic, and just indulgent enough.",
     category: "Chocolates · V/GF",
-    image: "/images/strawberry.png",
+    image: "/images/chocolate-dipped-strawberries.png",
     volumes: [
       { label: "Pack of 4", price: 349, originalPrice: 399 },
       { label: "Pack of 8", price: 649, originalPrice: 749 },
@@ -90,7 +90,7 @@ export const products: Product[] = [
     name: "Moringa Dust",
     tagline: "Slow, intentional, and alive.",
     category: "Podi · Condiments",
-    image: "/images/podi.png",
+    image: "/images/moringa_podi-02.png",
     volumes: [
       { label: "Pack of 4", price: 249, originalPrice: 299 },
       { label: "Pack of 8", price: 449, originalPrice: 549 },

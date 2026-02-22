@@ -6,13 +6,24 @@ import { useState } from "react";
 import { getProductBySlug } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerClose,
+  DrawerDescription,
+} from "@/components/ui/drawer";
+import {
   Minus,
   Plus,
   ShoppingCart,
   ChevronRight,
+  ChevronDown,
   Truck,
   Heart as HeartIcon,
   BadgePercent,
+  X,
   Instagram,
   Facebook,
   Twitter,
@@ -27,8 +38,11 @@ export default function ProductPage() {
 
   const [selectedVolume, setSelectedVolume] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [descOpen, setDescOpen] = useState(false);
-  const [deliveryOpen, setDeliveryOpen] = useState(false);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+
+  const toggleSection = (key: string) => {
+    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   if (!product) {
     return (
@@ -203,74 +217,273 @@ export default function ProductPage() {
               </button>
             </div>
 
-            {/* Description Accordion */}
-            <div className="border-t border-gray-200">
-              <button
-                onClick={() => setDescOpen(!descOpen)}
-                className="flex items-center justify-between w-full py-4 text-left"
-              >
-                <span className="text-sm font-semibold text-[#2d2016]">
-                  Description
-                </span>
-                <ChevronRight
-                  size={16}
-                  className={`text-gray-400 transition-transform duration-200 ${descOpen ? "rotate-90" : ""}`}
-                />
-              </button>
-              {descOpen && (
-                <div className="pb-4 space-y-4 text-sm text-[#5a4635]/80 leading-relaxed animate-fadeIn">
-                  <p>{product.description}</p>
-                  <div>
-                    <h4 className="font-semibold text-[#2d2016] mb-1">
-                      Ingredients
-                    </h4>
-                    <p>{product.ingredients}</p>
+            {/* Description Drawer */}
+            <Drawer direction="right">
+              <DrawerTrigger asChild>
+                <button className="flex items-center justify-between w-full py-4 text-left border-t border-gray-200 hover:text-[#c8956c] transition-colors group">
+                  <span className="text-sm font-semibold text-[#2d2016] group-hover:text-[#c8956c] transition-colors">
+                    Description
+                  </span>
+                  <ChevronRight
+                    size={16}
+                    className="text-gray-400 group-hover:text-[#c8956c] transition-colors"
+                  />
+                </button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader>
+                  <DrawerTitle>Description</DrawerTitle>
+                  <DrawerClose asChild>
+                    <button className="p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                      <X size={18} className="text-gray-500" />
+                    </button>
+                  </DrawerClose>
+                </DrawerHeader>
+                <DrawerDescription className="sr-only">
+                  Product description for {product.name}
+                </DrawerDescription>
+                <div className="flex-1 overflow-y-auto px-6 py-6">
+                  {/* Product Image in Drawer */}
+                  <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-6 bg-[#fdf8f3]">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                      sizes="400px"
+                    />
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-[#2d2016] mb-1">
-                      How to Enjoy
-                    </h4>
-                    <p>{product.howToEnjoy}</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-[#2d2016] mb-1">
-                      Storage
-                    </h4>
-                    <p>{product.storage}</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-[#2d2016] mb-1">
-                      Best Before
-                    </h4>
-                    <p>{product.bestBefore}</p>
-                  </div>
-                </div>
-              )}
-            </div>
 
-            {/* Delivery Details Accordion */}
-            <div className="border-t border-gray-200">
-              <button
-                onClick={() => setDeliveryOpen(!deliveryOpen)}
-                className="flex items-center justify-between w-full py-4 text-left"
-              >
-                <span className="text-sm font-semibold text-[#2d2016]">
-                  Delivery Details
-                </span>
-                <ChevronRight
-                  size={16}
-                  className={`text-gray-400 transition-transform duration-200 ${deliveryOpen ? "rotate-90" : ""}`}
-                />
-              </button>
-              {deliveryOpen && (
-                <div className="pb-4 text-sm text-[#5a4635]/80 leading-relaxed animate-fadeIn">
-                  <p>{product.deliveryDetails}</p>
+                  <p className="text-sm text-[#5a4635] leading-relaxed mb-6">
+                    {product.description}
+                  </p>
+
+                  {/* Collapsible Sections */}
+                  <div className="border-t border-gray-200">
+                    {/* Ingredients */}
+                    <button
+                      onClick={() => toggleSection("ingredients")}
+                      className="flex items-center justify-between w-full py-3.5 text-left group"
+                    >
+                      <span className="text-sm font-semibold text-[#2d2016]">
+                        Ingredients
+                      </span>
+                      <ChevronDown
+                        size={16}
+                        className={`text-gray-400 transition-transform duration-200 ${
+                          openSections.ingredients ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                        openSections.ingredients ? "max-h-96 pb-4" : "max-h-0"
+                      }`}
+                    >
+                      <table className="w-full text-sm border border-[#f0e6d8] rounded-lg overflow-hidden">
+                        <thead>
+                          <tr className="bg-[#f5ede3]">
+                            <th className="text-left py-2 px-3 text-xs font-semibold text-[#2d2016] uppercase tracking-wider">
+                              #
+                            </th>
+                            <th className="text-left py-2 px-3 text-xs font-semibold text-[#2d2016] uppercase tracking-wider">
+                              Ingredient
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {product.ingredients.split(",").map((item, idx) => (
+                            <tr
+                              key={idx}
+                              className={
+                                idx % 2 === 0 ? "bg-white" : "bg-[#fdf8f3]"
+                              }
+                            >
+                              <td className="py-2 px-3 text-[#5a4635]/60 font-medium">
+                                {idx + 1}
+                              </td>
+                              <td className="py-2 px-3 text-[#5a4635]">
+                                {item.trim()}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="border-t border-gray-200" />
+
+                    {/* How to Enjoy */}
+                    <button
+                      onClick={() => toggleSection("howToEnjoy")}
+                      className="flex items-center justify-between w-full py-3.5 text-left group"
+                    >
+                      <span className="text-sm font-semibold text-[#2d2016]">
+                        How to Enjoy
+                      </span>
+                      <ChevronDown
+                        size={16}
+                        className={`text-gray-400 transition-transform duration-200 ${
+                          openSections.howToEnjoy ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                        openSections.howToEnjoy ? "max-h-40 pb-4" : "max-h-0"
+                      }`}
+                    >
+                      <p className="text-sm text-[#5a4635]/80 leading-relaxed">
+                        {product.howToEnjoy}
+                      </p>
+                    </div>
+                    <div className="border-t border-gray-200" />
+
+                    {/* Storage */}
+                    <button
+                      onClick={() => toggleSection("storage")}
+                      className="flex items-center justify-between w-full py-3.5 text-left group"
+                    >
+                      <span className="text-sm font-semibold text-[#2d2016]">
+                        Storage
+                      </span>
+                      <ChevronDown
+                        size={16}
+                        className={`text-gray-400 transition-transform duration-200 ${
+                          openSections.storage ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                        openSections.storage ? "max-h-40 pb-4" : "max-h-0"
+                      }`}
+                    >
+                      <p className="text-sm text-[#5a4635]/80 leading-relaxed">
+                        {product.storage}
+                      </p>
+                    </div>
+                    <div className="border-t border-gray-200" />
+
+                    {/* Best Before */}
+                    <button
+                      onClick={() => toggleSection("bestBefore")}
+                      className="flex items-center justify-between w-full py-3.5 text-left group"
+                    >
+                      <span className="text-sm font-semibold text-[#2d2016]">
+                        Best Before
+                      </span>
+                      <ChevronDown
+                        size={16}
+                        className={`text-gray-400 transition-transform duration-200 ${
+                          openSections.bestBefore ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                        openSections.bestBefore ? "max-h-40 pb-4" : "max-h-0"
+                      }`}
+                    >
+                      <p className="text-sm text-[#5a4635]/80 leading-relaxed">
+                        {product.bestBefore}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
+              </DrawerContent>
+            </Drawer>
+
+            {/* Delivery Details Drawer */}
+            <Drawer direction="right">
+              <DrawerTrigger asChild>
+                <button className="flex items-center justify-between w-full py-4 text-left border-t border-b border-gray-200 hover:text-[#c8956c] transition-colors group">
+                  <span className="text-sm font-semibold text-[#2d2016] group-hover:text-[#c8956c] transition-colors">
+                    Delivery Details
+                  </span>
+                  <ChevronRight
+                    size={16}
+                    className="text-gray-400 group-hover:text-[#c8956c] transition-colors"
+                  />
+                </button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader>
+                  <DrawerTitle>Delivery Details</DrawerTitle>
+                  <DrawerClose asChild>
+                    <button className="p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                      <X size={18} className="text-gray-500" />
+                    </button>
+                  </DrawerClose>
+                </DrawerHeader>
+                <DrawerDescription className="sr-only">
+                  Delivery details for {product.name}
+                </DrawerDescription>
+                <div className="flex-1 overflow-y-auto px-6 py-6">
+                  <p className="text-sm text-[#5a4635] leading-relaxed mb-6">
+                    {product.deliveryDetails}
+                  </p>
+
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3 p-4 rounded-xl bg-[#fdf8f3] border border-[#f0e6d8]">
+                      <Truck
+                        size={20}
+                        className="text-[#c8956c] mt-0.5 flex-shrink-0"
+                      />
+                      <div>
+                        <p className="text-sm font-semibold text-[#2d2016]">
+                          Delivery Schedule
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          We deliver on Wednesdays and Sundays. Orders placed
+                          before 8 PM the previous day will be delivered on the
+                          next delivery day.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-4 rounded-xl bg-[#fdf8f3] border border-[#f0e6d8]">
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="w-5 h-5 text-[#c8956c] mt-0.5 flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        <path d="M9 12l2 2 4-4" />
+                      </svg>
+                      <div>
+                        <p className="text-sm font-semibold text-[#2d2016]">
+                          Safe Packaging
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          All items are carefully packed in food-grade,
+                          eco-friendly packaging to ensure freshness.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-4 rounded-xl bg-[#fdf8f3] border border-[#f0e6d8]">
+                      <BadgePercent
+                        size={20}
+                        className="text-[#c8956c] mt-0.5 flex-shrink-0"
+                      />
+                      <div>
+                        <p className="text-sm font-semibold text-[#2d2016]">
+                          Free Delivery
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Free delivery on all orders above ₹500.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </DrawerContent>
+            </Drawer>
 
             {/* Info Grid */}
-            <div className="border-t border-gray-200 pt-6 mt-2">
+            <div className="pt-6 mt-2">
               <div className="grid grid-cols-3 gap-3">
                 <div className="text-center p-4 rounded-xl bg-white border border-[#f0e6d8]">
                   <Truck size={22} className="mx-auto text-[#c8956c] mb-2" />

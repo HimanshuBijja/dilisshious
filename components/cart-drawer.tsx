@@ -70,7 +70,7 @@ export default function CartDrawer() {
           {/* Rewards Banner */}
           <div className="bg-[#fdf8f3] px-5 py-3">
             <div className="flex items-center gap-1 text-xs font-medium text-[#2d2016] mb-2">
-              <span>🎉</span>
+              <span></span>
               {subtotal < freeShippingThreshold ?
                 <span>
                   Add ₹{freeShippingThreshold - subtotal} more for free

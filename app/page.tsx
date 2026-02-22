@@ -11,78 +11,26 @@ export default function Home() {
       {/* Delivery Banner */}
       <div className="overflow-hidden bg-[#2d2016] text-white py-2.5 mt-16 sm:mt-20">
         <div className="animate-marquee whitespace-nowrap flex items-center gap-8">
-          {[...Array(6)].map((_, i) => (
+          {[...Array(20)].map((_, i) => (
             <span
               key={i}
-              className="inline-flex items-center gap-2 text-sm font-medium"
+              className="inline-flex items-center gap-2 text-sm font-medium "
             >
-              <span className="text-[#c8956c]">🚚</span> We Deliver on
-              Wednesdays and Sundays
-              <span className="mx-4 text-[#c8956c]">•</span>
+              <span className="text-[#c8956c]"></span> We Deliver on Wednesdays
+              and Sundays
+              <span className="mx-4 text-[#c8956c]"></span>
             </span>
           ))}
         </div>
       </div>
 
       {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#fdf8f3] via-[#f5ebe0] to-[#fdf8f3]" />
 
-        {/* Decorative circles */}
-        <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-[#c8956c]/5 blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-[#e8b98a]/5 blur-3xl" />
-
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#2d2016]/5 mb-6">
-            <Leaf size={14} className="text-[#c8956c]" />
-            <span className="text-xs font-medium text-[#5a4635] tracking-wider uppercase">
-              Farm not pharma · Small batches · Real ingredients
-            </span>
-          </div>
-
-          <h1
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-[#2d2016] leading-[0.95] tracking-tight mb-6"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Food that
-            <br />
-            <span className="text-[#c8956c] italic">nourishes</span>
-            <br />
-            beyond the plate
-          </h1>
-
-          <p className="text-lg sm:text-xl text-[#5a4635]/80 max-w-xl mx-auto mb-10 leading-relaxed">
-            Handcrafted with intention. Made in small batches. Every bite is a
-            quiet luxury you deserve.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="#products"
-              className="px-8 py-4 bg-[#2d2016] text-white font-semibold rounded-full hover:bg-[#1a120d] transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
-            >
-              Explore Our Menu
-            </a>
-            <a
-              href="#about"
-              className="px-8 py-4 border-2 border-[#2d2016]/20 text-[#2d2016] font-semibold rounded-full hover:border-[#c8956c] hover:text-[#c8956c] transition-all duration-300"
-            >
-              Our Story
-            </a>
-          </div>
-
-          {/* Scroll indicator */}
-          <div className="mt-16 animate-bounce">
-            <ChevronDown size={24} className="mx-auto text-[#c8956c]" />
-          </div>
-        </div>
-      </section>
 
       {/* Products Section */}
-      <section id="products" className="py-20 sm:py-28 px-4">
+      <section id="products" className="pb-20 pt-0 sm:py-6 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-6">
             <span className="inline-block text-xs font-semibold text-[#c8956c] uppercase tracking-[0.2em] mb-3">
               Our Collection
             </span>
@@ -206,7 +154,7 @@ export default function Home() {
             <div className="relative">
               <div className="aspect-[4/5] rounded-3xl overflow-hidden bg-[#e8d5c0]">
                 <Image
-                  src="/images/cookie.png"
+                  src="/images/cookie-01.png"
                   alt="About Dilisshious"
                   fill
                   className="object-cover"
