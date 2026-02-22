@@ -19,7 +19,7 @@ export default function Navbar() {
               className="text-2xl sm:text-3xl font-bold tracking-tight"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              <span className="text-[#2d2016]">Dilish</span>
+              <span className="text-[#2d2016]">Dilissh</span>
               <span className="text-[#c8956c]">ious</span>
             </span>
           </Link>
