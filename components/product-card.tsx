@@ -5,9 +5,18 @@ import Link from "next/link";
 import { ShoppingCart, Heart } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import type { Product } from "@/lib/products";
+import RotatingStarBadge from "@/components/ui/rotating-star-badge";
+
+const TAG_BADGE_MAP: Record<string, { text: string; color: string }> = {
+  Bestseller: { text: "HOT", color: "#FD5758" },
+  Fresh: { text: "NEW", color: "#45C873" },
+};
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart();
+
+  const badgeTag = product.tags?.find((t) => TAG_BADGE_MAP[t]);
+  const badge = badgeTag ? TAG_BADGE_MAP[badgeTag] : null;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -26,17 +35,14 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <Link href={`/product/${product.slug}`} className="group block">
       <div className="relative bg-white rounded-2xl overflow-hidden border border-[#f0e6d8] shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
-        {/* Tags */}
-        {product.tags && product.tags.length > 0 && (
-          <div className="absolute top-3 left-3 z-10 flex gap-1">
-            {product.tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-[#c8956c] text-white"
-              >
-                {tag}
-              </span>
-            ))}
+        {/* Rotating Star Badge */}
+        {badge && (
+          <div className="absolute top-2 left-2 z-20">
+            <RotatingStarBadge
+              text={badge.text}
+              color={badge.color}
+              size={56}
+            />
           </div>
         )}
 

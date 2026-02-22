@@ -5,6 +5,7 @@ import React, {
   useContext,
   useReducer,
   useCallback,
+  useEffect,
 } from "react";
 
 export interface CartItem {
@@ -32,7 +33,8 @@ type CartAction =
   | { type: "CLEAR_CART" }
   | { type: "TOGGLE_CART" }
   | { type: "OPEN_CART" }
-  | { type: "CLOSE_CART" };
+  | { type: "CLOSE_CART" }
+  | { type: "HYDRATE"; payload: CartItem[] };
 
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
@@ -98,10 +100,14 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       return { ...state, isOpen: true };
     case "CLOSE_CART":
       return { ...state, isOpen: false };
+    case "HYDRATE":
+      return { ...state, items: action.payload };
     default:
       return state;
   }
 }
+
+const CART_STORAGE_KEY = "dilishious-cart";
 
 interface CartContextType {
   items: CartItem[];
@@ -124,6 +130,30 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     items: [],
     isOpen: false,
   });
+
+  // Hydrate cart from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(CART_STORAGE_KEY);
+      if (stored) {
+        const items = JSON.parse(stored) as CartItem[];
+        if (Array.isArray(items) && items.length > 0) {
+          dispatch({ type: "HYDRATE", payload: items });
+        }
+      }
+    } catch {
+      // Ignore parse errors
+    }
+  }, []);
+
+  // Persist cart to localStorage on every change
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.items));
+    } catch {
+      // Ignore quota errors
+    }
+  }, [state.items]);
 
   const addToCart = useCallback(
     (item: CartItem) => dispatch({ type: "ADD_TO_CART", payload: item }),

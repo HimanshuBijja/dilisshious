@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import {
   Trash2,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 
 export default function CartDrawer() {
+  const router = useRouter();
   const {
     items,
     isOpen,
@@ -226,7 +228,13 @@ export default function CartDrawer() {
                 <span>Total to Pay</span>
                 <span>₹{subtotal}</span>
               </div>
-              <button className="w-full py-3.5 bg-[#2d2016] text-white font-semibold rounded-xl hover:bg-[#1a120d] transition-colors relative overflow-hidden group">
+              <button
+                onClick={() => {
+                  closeCart();
+                  router.push("/checkout");
+                }}
+                className="w-full py-3.5 bg-[#2d2016] text-white font-semibold rounded-xl hover:bg-[#1a120d] transition-colors relative overflow-hidden group"
+              >
                 <span className="relative z-10">Checkout</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#c8956c] to-[#e8b98a] opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
