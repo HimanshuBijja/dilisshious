@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
+import { useAuth } from "@/lib/auth-context";
+import { useSession } from "next-auth/react";
 import {
   Trash2,
   Plus,
@@ -15,6 +17,8 @@ import {
 
 export default function CartDrawer() {
   const router = useRouter();
+  const { status } = useSession();
+  const { openAuthModal } = useAuth();
   const {
     items,
     isOpen,
@@ -30,6 +34,15 @@ export default function CartDrawer() {
   const discountThreshold = 1000;
   const surpriseThreshold = 1500;
   const progress = Math.min((subtotal / surpriseThreshold) * 100, 100);
+
+  const handleCheckout = () => {
+    closeCart();
+    if (status === "authenticated") {
+      router.push("/checkout");
+    } else {
+      openAuthModal();
+    }
+  };
 
   return (
     <>
@@ -229,10 +242,7 @@ export default function CartDrawer() {
                 <span>₹{subtotal}</span>
               </div>
               <button
-                onClick={() => {
-                  closeCart();
-                  router.push("/checkout");
-                }}
+                onClick={handleCheckout}
                 className="w-full py-3.5 bg-[#2d2016] text-white font-semibold rounded-xl hover:bg-[#1a120d] transition-colors relative overflow-hidden group"
               >
                 <span className="relative z-10">Checkout</span>

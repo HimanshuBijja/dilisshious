@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import { getProductBySlug } from "@/lib/products";
+import { useState, useEffect } from "react";
+import type { Product } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 import {
   Drawer,
@@ -33,16 +33,41 @@ import Link from "next/link";
 export default function ProductPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const product = getProductBySlug(slug);
   const { addToCart } = useCart();
 
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
   const [selectedVolume, setSelectedVolume] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
+  useEffect(() => {
+    async function fetchProduct() {
+      try {
+        const res = await fetch(`/api/products/${slug}`);
+        if (res.ok) {
+          const data = await res.json();
+          setProduct(data);
+        }
+      } catch {
+        // Failed to fetch
+      }
+      setLoading(false);
+    }
+    fetchProduct();
+  }, [slug]);
+
   const toggleSection = (key: string) => {
     setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#fdf8f3] flex items-center justify-center pt-20">
+        <div className="w-8 h-8 border-3 border-[#c8956c] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!product) {
     return (

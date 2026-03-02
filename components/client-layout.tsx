@@ -2,8 +2,10 @@
 
 import { CartProvider } from "@/lib/cart-context";
 import { CheckoutProvider } from "@/lib/checkout-context";
+import { AuthProvider } from "@/lib/auth-context";
 import Navbar from "@/components/navbar";
 import CartDrawer from "@/components/cart-drawer";
+import AuthModal from "@/components/auth-modal";
 import Footer from "@/components/footer";
 
 export default function ClientLayout({
@@ -12,13 +14,16 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   return (
-    <CartProvider>
-      <CheckoutProvider>
-        <Navbar />
-        <CartDrawer />
-        <main>{children}</main>
-        <Footer />
-      </CheckoutProvider>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <CheckoutProvider>
+          <Navbar />
+          <CartDrawer />
+          <AuthModal />
+          <main>{children}</main>
+          <Footer />
+        </CheckoutProvider>
+      </CartProvider>
+    </AuthProvider>
   );
 }

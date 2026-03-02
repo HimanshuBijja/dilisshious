@@ -6,8 +6,9 @@ import {
   PartyPopper,
   Package,
   MapPin,
-  CreditCard,
+  QrCode,
   ArrowRight,
+  Mail,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -117,19 +118,34 @@ export default function OrderConfirmedPage() {
 
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-full bg-[#c8956c]/10 flex items-center justify-center shrink-0 mt-0.5">
-                <CreditCard size={14} className="text-[#c8956c]" />
+                <QrCode size={14} className="text-[#c8956c]" />
               </div>
               <div>
                 <p className="text-xs font-semibold text-[#5a4635] mb-0.5">
                   Payment
                 </p>
-                <p className="text-xs text-[#5a4635]/70">
-                  {data.paymentMethod === "cod" && "Cash on Delivery"}
-                  {data.paymentMethod === "upi" && "UPI Payment"}
-                  {data.paymentMethod === "card" && "Credit / Debit Card"}
-                </p>
+                <p className="text-xs text-[#5a4635]/70">UPI Payment</p>
               </div>
             </div>
+          </div>
+        </motion.div>
+
+        {/* Invoice Email Notice */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.7 }}
+          className="bg-green-50 rounded-2xl p-4 border border-green-200 mb-4 flex items-center gap-3 text-left"
+        >
+          <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+            <Mail size={18} className="text-green-600" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-green-800">Invoice Sent!</p>
+            <p className="text-xs text-green-600/80">
+              A detailed invoice has been sent to{" "}
+              <strong>{data.address.email || "your email"}</strong>
+            </p>
           </div>
         </motion.div>
 
@@ -144,9 +160,10 @@ export default function OrderConfirmedPage() {
             What happens next?
           </p>
           <p className="text-xs text-[#5a4635]/70 leading-relaxed">
-            You&apos;ll receive an order confirmation on{" "}
-            <strong>{data.address.email || "your email"}</strong>. We&apos;ll
-            prepare your treats fresh and deliver them on the next delivery day.
+            We&apos;ll verify your payment and start preparing your treats fresh.
+            You&apos;ll receive updates on{" "}
+            <strong>{data.address.email || "your email"}</strong>. Delivery on
+            the next scheduled day.
           </p>
         </motion.div>
 

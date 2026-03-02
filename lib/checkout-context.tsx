@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 export interface CheckoutAddress {
+  _id?: string;
   fullName: string;
   phone: string;
   email: string;
@@ -10,21 +11,26 @@ export interface CheckoutAddress {
   city: string;
   state: string;
   pincode: string;
+  latitude?: number;
+  longitude?: number;
+  formattedAddress?: string;
 }
 
 export interface CheckoutData {
   address: CheckoutAddress;
   deliveryMethod: "standard" | "express";
-  paymentMethod: "cod" | "upi" | "card";
+  paymentMethod: "upi";
   orderId: string;
+  selectedAddressId: string | null;
 }
 
 interface CheckoutContextType {
   data: CheckoutData;
   setAddress: (address: CheckoutAddress) => void;
   setDeliveryMethod: (method: "standard" | "express") => void;
-  setPaymentMethod: (method: "cod" | "upi" | "card") => void;
+  setPaymentMethod: (method: "upi") => void;
   setOrderId: (id: string) => void;
+  setSelectedAddressId: (id: string | null) => void;
   reset: () => void;
 }
 
@@ -39,8 +45,9 @@ const defaultData: CheckoutData = {
     pincode: "",
   },
   deliveryMethod: "standard",
-  paymentMethod: "cod",
+  paymentMethod: "upi",
   orderId: "",
+  selectedAddressId: null,
 };
 
 const CHECKOUT_STORAGE_KEY = "dilishious-checkout";
@@ -92,6 +99,8 @@ export function CheckoutProvider({ children }: { children: React.ReactNode }) {
         setPaymentMethod: (paymentMethod) =>
           setData((d) => ({ ...d, paymentMethod })),
         setOrderId: (orderId) => setData((d) => ({ ...d, orderId })),
+        setSelectedAddressId: (selectedAddressId) =>
+          setData((d) => ({ ...d, selectedAddressId })),
         reset,
       }}
     >

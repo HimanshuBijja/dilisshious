@@ -1,7 +1,9 @@
 import ProductCard from "@/components/product-card";
-import { products } from "@/lib/products";
+import { getProducts } from "@/lib/products";
 
-export default function ProductsSection() {
+export default async function ProductsSection() {
+  const products = await getProducts();
+
   return (
     <section id="products" className="pb-20 pt-0 sm:py-6 px-4">
       <div className="max-w-7xl mx-auto">
