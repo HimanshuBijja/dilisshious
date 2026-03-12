@@ -190,14 +190,14 @@ export default function AuthModal() {
                       </button>
 
                       {/* Divider */}
-                      <div className="flex items-center gap-3 py-1">
+                      {/* <div className="flex items-center gap-3 py-1">
                         <div className="flex-1 h-px bg-[#f0e6d8]" />
                         <span className="text-xs text-[#5a4635]/40 font-medium">OR</span>
                         <div className="flex-1 h-px bg-[#f0e6d8]" />
-                      </div>
+                      </div> */}
 
                       {/* Phone Sign In */}
-                      <button
+                      {/* <button
                         onClick={() => setStep("phone-input")}
                         className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-[#2d2016] text-white rounded-xl hover:bg-[#1a120d] transition-all duration-200 hover:shadow-lg"
                       >
@@ -205,7 +205,7 @@ export default function AuthModal() {
                         <span className="text-sm font-semibold">
                           Continue with Phone Number
                         </span>
-                      </button>
+                      </button> */}
                     </motion.div>
                   )}
 
