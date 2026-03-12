@@ -1,14 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import nodemailer from "nodemailer";
 
 export async function POST(req: NextRequest) {
   try {
-    const { orderId, email, customerName, items, address, deliveryMethod, deliveryCost, subtotal, total } =
+    // Get the customer's actual email from the server-side session (Google sign-in)
+    const session = await getServerSession(authOptions);
+    const sessionEmail = session?.user?.email;
+
+    const { orderId, customerName, items, address, deliveryMethod, deliveryCost, subtotal, total } =
       await req.json();
+
+    // Use session email (Google sign-in) as the customer email — never trust client-sent email
+    const email = sessionEmail;
 
     if (!orderId || !email) {
       return NextResponse.json(
-        { error: "Order ID and email are required" },
+        { error: "Order ID and authenticated email are required" },
         { status: 400 }
       );
     }

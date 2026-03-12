@@ -130,30 +130,25 @@ export default function PaymentPage() {
       if (orderData.orderId) {
         setOrderId(orderData.orderId);
 
-        // 2. Send invoice email
-        // Use Google sign-in email (customer's actual email) as primary
-        const email = (session?.user as { email?: string })?.email || data.address.email;
-        if (email) {
-          fetch("/api/orders/invoice", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              orderId: orderData.orderId,
-              email,
-              customerName: data.address.fullName,
-              items,
-              address: data.address,
-              deliveryMethod: data.deliveryMethod,
-              deliveryCost,
-              subtotal,
-              total,
-              couponCode: data.couponCode || undefined,
-              discount: discount || undefined,
-            }),
-          }).catch(() => {
-            // Email sending failure shouldn't block order confirmation
-          });
-        }
+        // 2. Send invoice email (API gets customer email from server-side session)
+        fetch("/api/orders/invoice", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: orderData.orderId,
+            customerName: data.address.fullName,
+            items,
+            address: data.address,
+            deliveryMethod: data.deliveryMethod,
+            deliveryCost,
+            subtotal,
+            total,
+            couponCode: data.couponCode || undefined,
+            discount: discount || undefined,
+          }),
+        }).catch(() => {
+          // Email sending failure shouldn't block order confirmation
+        });
 
         clearCart();
         router.push("/checkout/confirmed");
