@@ -684,7 +684,7 @@ export default function CheckoutPage() {
                       <button
                         onClick={async () => {
                           if (!couponInput.trim()) return;
-                          setCouponLoading(true);
+                          setCouponLoading(true); 
                           setCouponError("");
                           try {
                             const res = await fetch("/api/coupons/validate", {
