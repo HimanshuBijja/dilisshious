@@ -22,7 +22,8 @@
       "Vegan",
       "Gluten-Free",
       "Ancestral"
-    ]
+    ],
+    "badge": "Fresh"
   },
   {
     "slug": "strawberry-cheesecake-jar",
@@ -46,7 +47,8 @@
     "tags": [
       "Vegan",
       "Gluten-Free"
-    ]
+    ],
+    "badge": ""
   },
   {
     "slug": "organic-basil-pesto",
@@ -69,7 +71,8 @@
     "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Perishable — keep refrigerated upon receipt.",
     "tags": [
       "Gluten-Free"
-    ]
+    ],
+    "badge": ""
   },
   {
     "slug": "pizza-pasta-sauce",
@@ -93,7 +96,8 @@
     "tags": [
       "No Preservatives",
       "Gluten-Free"
-    ]
+    ],
+    "badge": ""
   },
   {
     "slug": "classic-ginger-chilli-jam",
@@ -117,7 +121,8 @@
     "tags": [
       "Vegan",
       "Gluten-Free"
-    ]
+    ],
+    "badge": ""
   },
   {
     "slug": "adaptogenic-protein-bars",
@@ -147,7 +152,8 @@
       "Vegan",
       "Gluten-Free",
       "Adaptogenic"
-    ]
+    ],
+    "badge": ""
   },
   {
     "slug": "sun-dried-tomato-hummus",
@@ -171,7 +177,8 @@
     "tags": [
       "Vegan",
       "Gluten-Free"
-    ]
+    ],
+    "badge": ""
   },
   {
     "slug": "gluten-free-banana-bread",
@@ -196,7 +203,30 @@
       "Gluten-Free",
       "Refined Sugar Free",
       "Contains Egg & Milk"
-    ]
+    ],
+    "badge": ""
+  },
+  {
+    "slug": "orange-peel-jam",
+    "name": "Orange Peel Jam",
+    "tagline": "Citrus sunshine in every spoonful.",
+    "category": "Spreads · Sauces",
+    "image": "/images/orange-peel-jam.png",
+    "volumes": [
+      {
+        "label": "200 gms",
+        "price": 320,
+        "_id": "69b242e62cb1123466993814"
+      }
+    ],
+    "description": "A bright, zesty jam crafted from real orange peel — naturally aromatic, gently sweet, and full of character. Made in small batches with care and intention.",
+    "ingredients": "Orange peel, sugar, lemon juice, water",
+    "howToEnjoy": "Spread over toast. Pair with scones or pancakes. Add to yoghurt bowls. Use as a glaze for baked goods.",
+    "storage": "Keep refrigerated after opening. Always use a dry spoon.",
+    "bestBefore": "2 months refrigerated",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Ships in sealed packaging.",
+    "tags": [],
+    "badge": ""
   },
   {
     "slug": "gourmet-brown-butter-cookies",
@@ -224,6 +254,7 @@
     "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed.",
     "tags": [
       "Bestseller"
-    ]
+    ],
+    "badge": ""
   }
 ]

@@ -131,7 +131,8 @@ export default function PaymentPage() {
         setOrderId(orderData.orderId);
 
         // 2. Send invoice email
-        const email = data.address.email || (session?.user as { email?: string })?.email;
+        // Use Google sign-in email (customer's actual email) as primary
+        const email = (session?.user as { email?: string })?.email || data.address.email;
         if (email) {
           fetch("/api/orders/invoice", {
             method: "POST",

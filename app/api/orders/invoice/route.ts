@@ -214,8 +214,8 @@ export async function POST(req: NextRequest) {
       html,
     });
 
-    // Send email to admin
-    if (adminEmail && adminEmail !== email) {
+    // Send email to admin (always notify owner of new orders)
+    if (adminEmail) {
       await transporter.sendMail({
         from: fromAddress,
         to: adminEmail,

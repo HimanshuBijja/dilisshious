@@ -21,6 +21,7 @@ export interface Product {
   bestBefore: string;
   deliveryDetails: string;
   tags?: string[];
+  badge?: string;
 }
 
 // Read products from static JSON file (zero DB calls)
@@ -99,6 +100,7 @@ export async function getProducts(): Promise<Product[]> {
         bestBefore: p.bestBefore,
         deliveryDetails: p.deliveryDetails,
         tags: p.tags,
+        badge: p.badge,
       }));
     }
   } catch {
@@ -141,6 +143,7 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
         bestBefore: p.bestBefore,
         deliveryDetails: p.deliveryDetails,
         tags: p.tags,
+        badge: p.badge,
       };
     }
   } catch {

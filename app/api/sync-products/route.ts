@@ -18,6 +18,7 @@ interface SyncProduct {
   bestBefore: string;
   deliveryDetails: string;
   tags: string[];
+  badge?: string;
   available: boolean;
 }
 
@@ -104,6 +105,7 @@ export async function POST(request: NextRequest) {
         bestBefore: p.bestBefore,
         deliveryDetails: p.deliveryDetails,
         tags: p.tags || [],
+        badge: p.badge || "",
       }));
 
     fs.writeFileSync(

@@ -15,8 +15,9 @@ const TAG_BADGE_MAP: Record<string, { text: string; color: string }> = {
 export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart();
 
-  const badgeTag = product.tags?.find((t) => TAG_BADGE_MAP[t]);
-  const badge = badgeTag ? TAG_BADGE_MAP[badgeTag] : null;
+  // Use dedicated badge field (from admin), fallback to tags for backward compat
+  const badgeKey = product.badge || product.tags?.find((t) => TAG_BADGE_MAP[t]);
+  const badge = badgeKey ? TAG_BADGE_MAP[badgeKey] : null;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
