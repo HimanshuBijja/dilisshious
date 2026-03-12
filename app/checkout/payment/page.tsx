@@ -35,10 +35,11 @@ export default function PaymentPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const deliveryCost =
-    data.deliveryMethod === "express" ? 49
+    data.deliveryMethod === "express" ? 70
     : subtotal >= 500 ? 0
     : 30;
-  const total = subtotal + deliveryCost;
+  const discount = data.discount || 0;
+  const total = subtotal - discount + deliveryCost;
 
   const upiId = process.env.NEXT_PUBLIC_UPI_ID || "dilisshious@upi";
   const upiName = process.env.NEXT_PUBLIC_UPI_NAME || "Dilisshious";
@@ -117,6 +118,8 @@ export default function PaymentPage() {
           deliveryCost,
           subtotal,
           total,
+          couponCode: data.couponCode || undefined,
+          discount: discount || undefined,
           paymentMethod: "upi",
           paymentScreenshot,
         }),
@@ -143,6 +146,8 @@ export default function PaymentPage() {
               deliveryCost,
               subtotal,
               total,
+              couponCode: data.couponCode || undefined,
+              discount: discount || undefined,
             }),
           }).catch(() => {
             // Email sending failure shouldn't block order confirmation
@@ -383,6 +388,12 @@ export default function PaymentPage() {
               <span>Subtotal</span>
               <span>₹{subtotal}</span>
             </div>
+            {discount > 0 && (
+              <div className="flex justify-between text-sm text-green-600 mb-1">
+                <span>Discount ({data.couponCode})</span>
+                <span>-₹{discount}</span>
+              </div>
+            )}
             <div className="flex justify-between text-sm text-[#5a4635]/70 mb-1">
               <span>
                 Delivery (

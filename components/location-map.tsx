@@ -143,13 +143,13 @@ export default function LocationMap({ onSelect, initialLat, initialLng }: Locati
         </div>
       )}
 
-      {/* Locate Me button */}
+      {/* Locate Me button - below map */}
       <button
         onClick={handleLocateMe}
         disabled={locating}
-        className="absolute top-3 right-3 z-[10] bg-white px-3 py-2 rounded-lg shadow-md border border-[#f0e6d8] flex items-center gap-1.5 text-xs font-semibold text-[#2d2016] hover:bg-[#fdf8f3] transition-all disabled:opacity-60"
+        className="w-full mt-3 bg-white px-4 py-2.5 rounded-xl shadow-sm border border-[#f0e6d8] flex items-center justify-center gap-2 text-sm font-semibold text-[#2d2016] hover:bg-[#fdf8f3] transition-all disabled:opacity-60"
       >
-        <Crosshair size={14} className={locating ? "animate-pulse text-[#c8956c]" : "text-[#c8956c]"} />
+        <Crosshair size={16} className={locating ? "animate-pulse text-[#c8956c]" : "text-[#c8956c]"} />
         {locating ? "Locating..." : "Use My Location"}
       </button>
 

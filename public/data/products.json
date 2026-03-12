@@ -1,39 +1,15 @@
 [
   {
-    "slug": "strawberry-cheesecake-jar",
-    "name": "Strawberry Cheesecake Jar (V/GF)",
-    "tagline": "Gentle indulgence in every spoon.",
-    "category": "Dessert Jars",
-    "image": "/images/strawberry-cheesecake-jar.png",
-    "volumes": [
-      {
-        "label": "150 gms jar",
-        "price": 290,
-        "_id": "69b23fda28f8301368b4ed85"
-      }
-    ],
-    "description": "A soft, creamy cheesecake layered with real strawberries, no artificial flavours, no loud sweetness, just gentle indulgence. This jar is for slow spoons, quiet afternoons, and moments when you want dessert that feels comforting and intentional. Made in small batches, just like it should be.",
-    "ingredients": "Fermented cashew cream, Greek yogurt, fresh strawberries, raw honey, coconut oil, gluten free blend, vanilla extract, lemon",
-    "howToEnjoy": "Best enjoyed chilled. Take a moment. Eat slowly. Let it melt.",
-    "storage": "Refrigerate at all times.",
-    "bestBefore": "3 days from date of manufacture",
-    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Perishable — handle with care.",
-    "tags": [
-      "Vegan",
-      "Gluten-Free"
-    ]
-  },
-  {
     "slug": "moringa-dust",
     "name": "Moringa Dust (V/GF)",
     "tagline": "Slow, intentional, and alive.",
     "category": "Podi · Condiments",
-    "image": "/images/moringa-dust.png",
+    "image": "/images/moringa-dust.jpg",
     "volumes": [
       {
         "label": "200 gms",
         "price": 380,
-        "_id": "69b23fda28f8301368b4ed87"
+        "_id": "69b242e62cb1123466993805"
       }
     ],
     "description": "This is moringa the way it was meant to be — slow, intentional, and alive. Our moringa podi is hand-pounded, not machine-blasted, preserving the leaf's natural oils, aroma, and prana. The result is a deeply green, earthy condiment that supports digestion, liver health, skin clarity, and daily vitality. Made the ancestral way, because some things can't be rushed — especially nourishment.",
@@ -49,6 +25,30 @@
     ]
   },
   {
+    "slug": "strawberry-cheesecake-jar",
+    "name": "Strawberry Cheesecake Jar (V/GF)",
+    "tagline": "Gentle indulgence in every spoon.",
+    "category": "Dessert Jars",
+    "image": "/images/strawberry-cheesecake-jar.jpg",
+    "volumes": [
+      {
+        "label": "150 gms jar",
+        "price": 290,
+        "_id": "69b242e62cb1123466993803"
+      }
+    ],
+    "description": "A soft, creamy cheesecake layered with real strawberries, no artificial flavours, no loud sweetness, just gentle indulgence. This jar is for slow spoons, quiet afternoons, and moments when you want dessert that feels comforting and intentional. Made in small batches, just like it should be.",
+    "ingredients": "Fermented cashew cream, Greek yogurt, fresh strawberries, raw honey, coconut oil, gluten free blend, vanilla extract, lemon",
+    "howToEnjoy": "Best enjoyed chilled. Take a moment. Eat slowly. Let it melt.",
+    "storage": "Refrigerate at all times.",
+    "bestBefore": "3 days from date of manufacture",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Perishable — handle with care.",
+    "tags": [
+      "Vegan",
+      "Gluten-Free"
+    ]
+  },
+  {
     "slug": "organic-basil-pesto",
     "name": "Organic Basil Pesto (GF)",
     "tagline": "Fresh. Honest. Deeply satisfying.",
@@ -58,7 +58,7 @@
       {
         "label": "200 gms",
         "price": 540,
-        "_id": "69b23fda28f8301368b4ed89"
+        "_id": "69b242e62cb1123466993807"
       }
     ],
     "description": "Bright basil leaves crushed into silky extra virgin olive oil, finished with real aged parmesan and earthy walnuts — this is pesto the old-world way. No shortcuts, no powders, no artificial tang. Just sun, soil, and slow blending. Fresh. Honest. Deeply satisfying.",
@@ -81,7 +81,7 @@
       {
         "label": "400 gms",
         "price": 590,
-        "_id": "69b23fda28f8301368b4ed8b"
+        "_id": "69b242e62cb1123466993809"
       }
     ],
     "description": "Slow-simmered tomatoes, garlic, herbs, and patience. This sauce tastes like an Italian grandmother moved to your kitchen and refused to use preservatives. Naturally sweet, gently tangy, and deeply comforting. Your shortcut — without cutting corners.",
@@ -105,7 +105,7 @@
       {
         "label": "200 gms",
         "price": 380,
-        "_id": "69b23fda28f8301368b4ed8d"
+        "_id": "69b242e62cb112346699380b"
       }
     ],
     "description": "Sweet heat with a backbone. Fresh ginger and chilli slow-cooked with mineral-rich palm jaggery — warming, bold, and deeply alive. It tingles the tongue and wakes up digestion. The kind of jam that doesn't whisper — it sings.",
@@ -129,12 +129,12 @@
       {
         "label": "Pack of 6",
         "price": 720,
-        "_id": "69b23fda28f8301368b4ed8f"
+        "_id": "69b242e62cb112346699380d"
       },
       {
         "label": "Pack of 12",
         "price": 1380,
-        "_id": "69b23fda28f8301368b4ed90"
+        "_id": "69b242e62cb112346699380e"
       }
     ],
     "description": "Dense, nourishing, and intelligently indulgent. These aren't \"diet bars.\" They're strength bars. Creamy coconut, crunchy seeds, rich cacao, and high-quality whey protein — enhanced with ashwagandha and brahmi for calm focus and resilience. Fuel that feels steady, not spiky.",
@@ -159,7 +159,7 @@
       {
         "label": "330 gms",
         "price": 590,
-        "_id": "69b23fda28f8301368b4ed92"
+        "_id": "69b242e62cb1123466993810"
       }
     ],
     "description": "Creamy, protein-rich hummus elevated with sun-dried tomatoes — tangy, earthy, and deeply satisfying. It's the kind of spread that turns simple bread into something intentional. A gut-friendly classic with a bold twist.",
@@ -183,7 +183,7 @@
       {
         "label": "400 gms loaf",
         "price": 520,
-        "_id": "69b23fda28f8301368b4ed94"
+        "_id": "69b242e62cb1123466993812"
       }
     ],
     "description": "Moist, lightly sweet, and mineral-rich — this banana bread is made with our FG blend, designed to nourish beyond flavour. Naturally sweetened, rich in B vitamins and essential minerals, and beautifully grounding. Comfort food — upgraded.",
@@ -203,17 +203,17 @@
     "name": "Gourmet Brown Butter Cookies",
     "tagline": "Crisp edges. Soft centre. Worth every bite.",
     "category": "Cookies",
-    "image": "/images/gourmet-brown-butter-cookies.png",
+    "image": "/images/gourmet-brown-butter-cookies.jpg",
     "volumes": [
       {
         "label": "Pack of 4",
         "price": 480,
-        "_id": "69b23fda28f8301368b4ed82"
+        "_id": "69b242e62cb1123466993800"
       },
       {
         "label": "Pack of 8",
         "price": 920,
-        "_id": "69b23fda28f8301368b4ed83"
+        "_id": "69b242e62cb1123466993801"
       }
     ],
     "description": "These cookies begin with patience. We slowly brown the butter until it turns nutty, aromatic, and golden, then fold it into a dough that's crisp on the edges, soft at the centre filled with a mix of organically sourced dark & milk chocolate. Each bite tastes like warmth, nostalgia, and a quiet luxury you didn't know you needed. This is not a \"guilt-free\" cookie. It's a worth-it cookie.",

@@ -11,8 +11,8 @@ const deliveryOptions = [
     id: "standard" as const,
     title: "Standard Delivery",
     description: "Wed & Sun delivery schedule",
-    price: 0,
-    priceLabel: "Free",
+    price: 30,
+    priceLabel: "₹30",
     eta: "Next delivery day",
     icon: Truck,
   },
@@ -20,8 +20,8 @@ const deliveryOptions = [
     id: "express" as const,
     title: "Express Delivery",
     description: "Same day if ordered before 12 PM",
-    price: 49,
-    priceLabel: "₹49",
+    price: 70,
+    priceLabel: "₹70",
     eta: "Today / Tomorrow",
     icon: Zap,
   },
@@ -33,9 +33,12 @@ export default function DeliveryPage() {
   const { subtotal } = useCart();
 
   const deliveryCost =
-    data.deliveryMethod === "express" ? 49
+    data.deliveryMethod === "express" ? 70
     : subtotal >= 500 ? 0
     : 30;
+
+  const discount = data.discount || 0;
+  const total = subtotal - discount + deliveryCost;
 
   const handleContinue = () => {
     router.push("/checkout/payment");
@@ -147,13 +150,19 @@ export default function DeliveryPage() {
               <span>Subtotal</span>
               <span>₹{subtotal}</span>
             </div>
+            {discount > 0 && (
+              <div className="flex justify-between text-sm text-green-600 mb-1">
+                <span>Discount ({data.couponCode})</span>
+                <span>-₹{discount}</span>
+              </div>
+            )}
             <div className="flex justify-between text-sm text-[#5a4635]/70 mb-1">
               <span>Delivery</span>
               <span>{deliveryCost === 0 ? "Free" : `₹${deliveryCost}`}</span>
             </div>
             <div className="flex justify-between text-lg font-bold text-[#2d2016] mt-2 pt-2 border-t border-[#f0e6d8]">
               <span>Total</span>
-              <span>₹{subtotal + deliveryCost}</span>
+              <span>₹{total}</span>
             </div>
           </div>
 

@@ -18,6 +18,8 @@ import {
   Navigation,
   ChevronRight,
   ChevronLeft,
+  Tag,
+  X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
@@ -45,7 +47,7 @@ export default function CheckoutPage() {
   const { status } = useSession();
   const { openAuthModal } = useAuth();
   const { items, subtotal } = useCart();
-  const { data, setAddress, setSelectedAddressId } = useCheckout();
+  const { data, setAddress, setSelectedAddressId, setCoupon, removeCoupon } = useCheckout();
 
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
   const [loadingAddresses, setLoadingAddresses] = useState(true);
@@ -53,6 +55,9 @@ export default function CheckoutPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<CheckoutAddress>(data.address);
   const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number } | null>(null);
+  const [couponInput, setCouponInput] = useState(data.couponCode || "");
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState("");
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -653,17 +658,79 @@ export default function CheckoutPage() {
                 ))}
               </div>
               <div className="border-t border-[#f0e6d8] pt-3">
+
+                {/* Coupon Code Input */}
+                {data.couponCode ? (
+                  <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-3 py-2 mb-3">
+                    <div className="flex items-center gap-2">
+                      <Tag size={14} className="text-green-600" />
+                      <span className="text-sm font-semibold text-green-700">{data.couponCode}</span>
+                      <span className="text-xs text-green-600">(-₹{data.discount})</span>
+                    </div>
+                    <button onClick={() => { removeCoupon(); setCouponInput(""); setCouponError(""); }} className="text-gray-400 hover:text-red-500 transition-colors">
+                      <X size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mb-3">
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Coupon code"
+                        value={couponInput}
+                        onChange={(e) => { setCouponInput(e.target.value.toUpperCase()); setCouponError(""); }}
+                        className="flex-1 px-3 py-2 text-sm border border-[#f0e6d8] rounded-xl bg-white focus:outline-none focus:border-[#c8956c] placeholder:text-gray-400"
+                      />
+                      <button
+                        onClick={async () => {
+                          if (!couponInput.trim()) return;
+                          setCouponLoading(true);
+                          setCouponError("");
+                          try {
+                            const res = await fetch("/api/coupons/validate", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ code: couponInput.trim(), subtotal }),
+                            });
+                            const d = await res.json();
+                            if (d.valid) {
+                              setCoupon(d.code, d.discount);
+                            } else {
+                              setCouponError(d.error || "Invalid coupon code");
+                            }
+                          } catch {
+                            setCouponError("Failed to verify coupon");
+                          } finally {
+                            setCouponLoading(false);
+                          }
+                        }}
+                        disabled={couponLoading || !couponInput.trim()}
+                        className="px-4 py-2 bg-[#2d2016] text-white text-sm font-semibold rounded-xl hover:bg-[#1a120d] transition-colors disabled:opacity-50"
+                      >
+                        {couponLoading ? "..." : "Apply"}
+                      </button>
+                    </div>
+                    {couponError && <p className="text-xs text-red-500 mt-1">{couponError}</p>}
+                  </div>
+                )}
+
                 <div className="flex justify-between text-sm text-[#5a4635]/70 mb-1">
                   <span>Subtotal</span>
                   <span>₹{subtotal}</span>
                 </div>
+                {data.discount > 0 && (
+                  <div className="flex justify-between text-sm text-green-600 mb-1">
+                    <span>Discount ({data.couponCode})</span>
+                    <span>-₹{data.discount}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-sm text-[#5a4635]/70 mb-1">
                   <span>Delivery</span>
                   <span className="text-[#c8956c] font-medium">Calculated next</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold text-[#2d2016] mt-2">
                   <span>Total</span>
-                  <span>₹{subtotal}</span>
+                  <span>₹{subtotal - (data.discount || 0)}</span>
                 </div>
               </div>
             </div>

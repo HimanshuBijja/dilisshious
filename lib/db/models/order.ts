@@ -27,6 +27,8 @@ export interface IOrder extends Document {
   deliveryCost: number;
   subtotal: number;
   total: number;
+  couponCode?: string;
+  discount?: number;
   paymentMethod: string;
   paymentScreenshot?: string;
   status: "pending" | "confirmed" | "preparing" | "dispatched" | "delivered" | "cancelled";
@@ -66,6 +68,8 @@ const OrderSchema = new Schema<IOrder>(
     deliveryCost: { type: Number, required: true },
     subtotal: { type: Number, required: true },
     total: { type: Number, required: true },
+    couponCode: { type: String },
+    discount: { type: Number, default: 0 },
     paymentMethod: { type: String, required: true },
     paymentScreenshot: { type: String },
     status: {

@@ -22,6 +22,8 @@ export interface CheckoutData {
   paymentMethod: "upi";
   orderId: string;
   selectedAddressId: string | null;
+  couponCode: string;
+  discount: number;
 }
 
 interface CheckoutContextType {
@@ -31,6 +33,8 @@ interface CheckoutContextType {
   setPaymentMethod: (method: "upi") => void;
   setOrderId: (id: string) => void;
   setSelectedAddressId: (id: string | null) => void;
+  setCoupon: (code: string, discount: number) => void;
+  removeCoupon: () => void;
   reset: () => void;
 }
 
@@ -48,6 +52,8 @@ const defaultData: CheckoutData = {
   paymentMethod: "upi",
   orderId: "",
   selectedAddressId: null,
+  couponCode: "",
+  discount: 0,
 };
 
 const CHECKOUT_STORAGE_KEY = "dilishious-checkout";
@@ -106,6 +112,10 @@ export function CheckoutProvider({ children }: { children: React.ReactNode }) {
         setOrderId: (orderId) => setData((d) => ({ ...d, orderId })),
         setSelectedAddressId: (selectedAddressId) =>
           setData((d) => ({ ...d, selectedAddressId })),
+        setCoupon: (couponCode, discount) =>
+          setData((d) => ({ ...d, couponCode, discount })),
+        removeCoupon: () =>
+          setData((d) => ({ ...d, couponCode: "", discount: 0 })),
         reset,
       }}
     >

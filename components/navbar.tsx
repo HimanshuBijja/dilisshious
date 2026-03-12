@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Menu, X, LogOut, User } from "lucide-react";
+import { ShoppingBag, Menu, X, LogOut, User, Package } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useSession, signOut } from "next-auth/react";
 import { useAuth } from "@/lib/auth-context";
@@ -122,6 +122,14 @@ export default function Navbar() {
                         </p>
                       )}
                     </div>
+                    <Link
+                      href="/orders"
+                      onClick={() => setProfileOpen(false)}
+                      className="w-full flex items-center gap-2 px-4 py-3 text-sm text-[#2d2016] hover:bg-[#fdf8f3] transition-colors border-b border-[#f0e6d8]"
+                    >
+                      <Package size={16} className="text-[#c8956c]" />
+                      My Orders
+                    </Link>
                     <button
                       onClick={() => {
                         setProfileOpen(false);

@@ -13,6 +13,8 @@ export async function createOrder(data: {
   total: number;
   paymentMethod: string;
   paymentScreenshot?: string;
+  couponCode?: string;
+  discount?: number;
 }): Promise<IOrder> {
   await connectDB();
   const order = await Order.create({

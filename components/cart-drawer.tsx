@@ -12,8 +12,6 @@ import {
   Minus,
   X,
   Truck,
-  Gift,
-  BadgePercent,
 } from "lucide-react";
 
 export default function CartDrawer() {
@@ -32,9 +30,8 @@ export default function CartDrawer() {
 
   // Rewards thresholds
   const freeShippingThreshold = 500;
-  const discountThreshold = 1000;
-  const surpriseThreshold = 1500;
-  const progress = Math.min((subtotal / surpriseThreshold) * 100, 100);
+  const progress = Math.min((subtotal / freeShippingThreshold) * 100, 100);
+  const deliveryCost = subtotal >= freeShippingThreshold ? 0 : 30;
 
   // After auth completes (e.g. Google OAuth redirect), redirect to checkout if pending
   useEffect(() => {
@@ -98,21 +95,12 @@ export default function CartDrawer() {
           {/* Rewards Banner */}
           <div className="bg-[#fdf8f3] px-5 py-3">
             <div className="flex items-center gap-1 text-xs font-medium text-[#2d2016] mb-2">
-              <span></span>
               {subtotal < freeShippingThreshold ?
                 <span>
                   Add ₹{freeShippingThreshold - subtotal} more for free
                   shipping!
                 </span>
-              : subtotal < discountThreshold ?
-                <span>
-                  Add ₹{discountThreshold - subtotal} more for 5% off!
-                </span>
-              : subtotal < surpriseThreshold ?
-                <span>
-                  Add ₹{surpriseThreshold - subtotal} more for a surprise box!
-                </span>
-              : <span>🎁 You&apos;ve unlocked all rewards!</span>}
+              : <span>🚚 You&apos;ve unlocked free shipping!</span>}
             </div>
             <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
@@ -124,7 +112,7 @@ export default function CartDrawer() {
                 }}
               />
             </div>
-            <div className="flex justify-between mt-2">
+            <div className="flex justify-end mt-2">
               <div className="flex flex-col items-center">
                 <div
                   className={`w-7 h-7 rounded-full flex items-center justify-center ${subtotal >= freeShippingThreshold ? "bg-[#c8956c] text-white" : "bg-gray-200 text-gray-400"}`}
@@ -132,27 +120,7 @@ export default function CartDrawer() {
                   <Truck size={14} />
                 </div>
                 <span className="text-[10px] font-medium text-gray-500 mt-1">
-                  Free Ship
-                </span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center ${subtotal >= discountThreshold ? "bg-[#c8956c] text-white" : "bg-gray-200 text-gray-400"}`}
-                >
-                  <BadgePercent size={14} />
-                </div>
-                <span className="text-[10px] font-medium text-gray-500 mt-1">
-                  5% Off
-                </span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center ${subtotal >= surpriseThreshold ? "bg-[#c8956c] text-white" : "bg-gray-200 text-gray-400"}`}
-                >
-                  <Gift size={14} />
-                </div>
-                <span className="text-[10px] font-medium text-gray-500 mt-1">
-                  Surprise
+                  ₹500
                 </span>
               </div>
             </div>
@@ -250,9 +218,13 @@ export default function CartDrawer() {
                 <span>Subtotal</span>
                 <span>₹{subtotal}</span>
               </div>
-              <div className="flex justify-between text-base font-bold text-[#2d2016] mb-4">
+              <div className="flex justify-between text-sm text-gray-500 mb-1">
+                <span>Delivery</span>
+                <span>{deliveryCost === 0 ? <span className="text-green-600 font-medium">Free</span> : `₹${deliveryCost}`}</span>
+              </div>
+              <div className="flex justify-between text-base font-bold text-[#2d2016] mb-4 pt-2 border-t border-gray-100">
                 <span>Total to Pay</span>
-                <span>₹{subtotal}</span>
+                <span>₹{subtotal + deliveryCost}</span>
               </div>
               <button
                 onClick={handleCheckout}
