@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
@@ -35,11 +36,23 @@ export default function CartDrawer() {
   const surpriseThreshold = 1500;
   const progress = Math.min((subtotal / surpriseThreshold) * 100, 100);
 
+  // After auth completes (e.g. Google OAuth redirect), redirect to checkout if pending
+  useEffect(() => {
+    if (status === "authenticated") {
+      const pending = localStorage.getItem("pending-checkout");
+      if (pending === "true") {
+        localStorage.removeItem("pending-checkout");
+        router.push("/checkout");
+      }
+    }
+  }, [status, router]);
+
   const handleCheckout = () => {
     closeCart();
     if (status === "authenticated") {
       router.push("/checkout");
     } else {
+      localStorage.setItem("pending-checkout", "true");
       openAuthModal();
     }
   };

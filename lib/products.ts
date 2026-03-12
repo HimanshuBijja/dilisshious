@@ -1,5 +1,5 @@
-import { connectDB } from "@/lib/db/mongoose";
-import ProductModel, { IProduct } from "@/lib/db/models/product";
+import * as fs from "fs";
+import * as path from "path";
 
 export interface ProductVolume {
   label: string;
@@ -23,7 +23,21 @@ export interface Product {
   tags?: string[];
 }
 
-// Hardcoded fallback products (used when DB is unavailable)
+// Read products from static JSON file (zero DB calls)
+function readStaticProducts(): Product[] | null {
+  try {
+    const filePath = path.join(process.cwd(), "public", "data", "products.json");
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, "utf-8");
+      return JSON.parse(data) as Product[];
+    }
+  } catch (err) {
+    console.error("Failed to read static products:", err);
+  }
+  return null;
+}
+
+// Hardcoded fallback product (used when static JSON is not available yet)
 const fallbackProducts: Product[] = [
   {
     slug: "gourmet-brown-butter-cookies",
@@ -50,14 +64,24 @@ const fallbackProducts: Product[] = [
 ];
 
 export async function getProducts(): Promise<Product[]> {
+  // Try static JSON first (zero DB calls)
+  const staticProducts = readStaticProducts();
+  if (staticProducts && staticProducts.length > 0) {
+    return staticProducts;
+  }
+
+  // Fallback to DB if static JSON doesn't exist yet
   try {
+    const { connectDB } = await import("@/lib/db/mongoose");
+    const { default: ProductModel } = await import("@/lib/db/models/product");
     await connectDB();
     const dbProducts = await ProductModel.find({ available: true })
       .sort({ createdAt: -1 })
-      .lean<IProduct[]>();
+      .lean();
 
     if (dbProducts.length > 0) {
-      return dbProducts.map((p: IProduct) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return dbProducts.map((p: any) => ({
         slug: p.slug,
         name: p.name,
         tagline: p.tagline,
@@ -84,28 +108,39 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | undefined> {
+  // Try static JSON first (zero DB calls)
+  const staticProducts = readStaticProducts();
+  if (staticProducts && staticProducts.length > 0) {
+    return staticProducts.find((p) => p.slug === slug);
+  }
+
+  // Fallback to DB if static JSON doesn't exist yet
   try {
+    const { connectDB } = await import("@/lib/db/mongoose");
+    const { default: ProductModel } = await import("@/lib/db/models/product");
     await connectDB();
-    const product = await ProductModel.findOne({ slug, available: true }).lean<IProduct | null>();
+    const product = await ProductModel.findOne({ slug, available: true }).lean();
     if (product) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const p = product as any;
       return {
-        slug: product.slug,
-        name: product.name,
-        tagline: product.tagline,
-        category: product.category,
-        image: product.image,
-        volumes: product.volumes.map((v: { label: string; price: number; originalPrice?: number }) => ({
+        slug: p.slug,
+        name: p.name,
+        tagline: p.tagline,
+        category: p.category,
+        image: p.image,
+        volumes: p.volumes.map((v: { label: string; price: number; originalPrice?: number }) => ({
           label: v.label,
           price: v.price,
           originalPrice: v.originalPrice,
         })),
-        description: product.description,
-        ingredients: product.ingredients,
-        howToEnjoy: product.howToEnjoy,
-        storage: product.storage,
-        bestBefore: product.bestBefore,
-        deliveryDetails: product.deliveryDetails,
-        tags: product.tags,
+        description: p.description,
+        ingredients: p.ingredients,
+        howToEnjoy: p.howToEnjoy,
+        storage: p.storage,
+        bestBefore: p.bestBefore,
+        deliveryDetails: p.deliveryDetails,
+        tags: p.tags,
       };
     }
   } catch {
@@ -115,5 +150,4 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
 }
 
 // Keep old export for backward compatibility
-// New code should use getProducts() async function
 export const products = fallbackProducts;

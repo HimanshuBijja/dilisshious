@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { X, Phone, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +12,7 @@ type Step = "choose" | "phone-input" | "otp-input";
 export default function AuthModal() {
   const { showAuthModal, closeAuthModal } = useAuth();
   const { status } = useSession();
+  const router = useRouter();
   const [step, setStep] = useState<Step>("choose");
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
@@ -89,6 +91,11 @@ export default function AuthModal() {
         });
         if (result?.ok) {
           closeAuthModal();
+          const pending = localStorage.getItem("pending-checkout");
+          if (pending === "true") {
+            localStorage.removeItem("pending-checkout");
+            router.push("/checkout");
+          }
         } else {
           setError("Sign in failed. Please try again.");
         }

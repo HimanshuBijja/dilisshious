@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 
 export interface CheckoutAddress {
   _id?: string;
@@ -58,6 +58,7 @@ const CheckoutContext = createContext<CheckoutContextType | undefined>(
 
 export function CheckoutProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<CheckoutData>(defaultData);
+  const isHydrated = useRef(false);
 
   // Hydrate from sessionStorage on mount
   useEffect(() => {
@@ -71,8 +72,12 @@ export function CheckoutProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Persist to sessionStorage on every change
+  // Persist to sessionStorage on every change (skip first run to let hydration take effect)
   useEffect(() => {
+    if (!isHydrated.current) {
+      isHydrated.current = true;
+      return;
+    }
     try {
       sessionStorage.setItem(CHECKOUT_STORAGE_KEY, JSON.stringify(data));
     } catch {

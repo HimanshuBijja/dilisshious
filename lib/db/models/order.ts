@@ -28,6 +28,7 @@ export interface IOrder extends Document {
   subtotal: number;
   total: number;
   paymentMethod: string;
+  paymentScreenshot?: string;
   status: "pending" | "confirmed" | "preparing" | "dispatched" | "delivered" | "cancelled";
   createdAt: Date;
   updatedAt: Date;
@@ -66,6 +67,7 @@ const OrderSchema = new Schema<IOrder>(
     subtotal: { type: Number, required: true },
     total: { type: Number, required: true },
     paymentMethod: { type: String, required: true },
+    paymentScreenshot: { type: String },
     status: {
       type: String,
       enum: ["pending", "confirmed", "preparing", "dispatched", "delivered", "cancelled"],

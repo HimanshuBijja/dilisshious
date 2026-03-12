@@ -6,6 +6,7 @@ import React, {
   useReducer,
   useCallback,
   useEffect,
+  useRef,
 } from "react";
 
 export interface CartItem {
@@ -130,6 +131,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     items: [],
     isOpen: false,
   });
+  const isHydrated = useRef(false);
 
   // Hydrate cart from localStorage on mount
   useEffect(() => {
@@ -146,8 +148,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Persist cart to localStorage on every change
+  // Persist cart to localStorage on every change (skip first run to let hydration take effect)
   useEffect(() => {
+    if (!isHydrated.current) {
+      isHydrated.current = true;
+      return;
+    }
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.items));
     } catch {

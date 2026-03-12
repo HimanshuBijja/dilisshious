@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { items, address, deliveryMethod, deliveryCost, subtotal, total, paymentMethod } = body;
+    const { items, address, deliveryMethod, deliveryCost, subtotal, total, paymentMethod, paymentScreenshot } = body;
 
     if (!items?.length || !address || !deliveryMethod) {
       return NextResponse.json(
@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
       subtotal,
       total,
       paymentMethod,
+      paymentScreenshot,
     });
 
     return NextResponse.json({

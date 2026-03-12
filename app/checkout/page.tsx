@@ -85,7 +85,6 @@ export default function CheckoutPage() {
       latitude: lat,
       longitude: lng,
       formattedAddress: address || "",
-      address: address || prev.address,
     }));
   }, []);
 

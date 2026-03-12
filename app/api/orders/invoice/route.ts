@@ -27,12 +27,19 @@ export async function POST(req: NextRequest) {
       .map(
         (item: { name: string; volume: string; quantity: number; price: number }) =>
           `<tr>
-            <td style="padding: 10px 16px; border-bottom: 1px solid #f0e6d8;">${item.name} (${item.volume})</td>
-            <td style="padding: 10px 16px; border-bottom: 1px solid #f0e6d8; text-align: center;">${item.quantity}</td>
-            <td style="padding: 10px 16px; border-bottom: 1px solid #f0e6d8; text-align: right;">₹${item.price * item.quantity}</td>
+            <td style="padding: 12px 16px; border-bottom: 1px solid #f0e6d8; font-size: 14px; color: #2d2016;">${item.name} <span style="color: #5a4635; font-size: 12px;">(${item.volume})</span></td>
+            <td style="padding: 12px 16px; border-bottom: 1px solid #f0e6d8; text-align: center; font-size: 14px; color: #2d2016;">${item.quantity}</td>
+            <td style="padding: 12px 16px; border-bottom: 1px solid #f0e6d8; text-align: right; font-size: 14px; font-weight: 600; color: #2d2016;">₹${item.price * item.quantity}</td>
           </tr>`
       )
       .join("");
+
+    const orderDate = new Date().toLocaleDateString("en-IN", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
 
     const html = `
     <!DOCTYPE html>
@@ -59,30 +66,41 @@ export async function POST(req: NextRequest) {
                 <td style="padding: 32px 40px 16px;">
                   <h2 style="margin: 0; font-size: 22px; color: #2d2016;">Thank you, ${customerName || "there"}! 🎉</h2>
                   <p style="margin: 8px 0 0; font-size: 14px; color: #5a4635; line-height: 1.6;">
-                    Your order has been confirmed. We're preparing your treats with love and care.
+                    Your order has been confirmed and we're already preparing your treats fresh with love and care.
                   </p>
                 </td>
               </tr>
 
-              <!-- Order ID -->
+              <!-- Order ID & Date -->
               <tr>
                 <td style="padding: 0 40px 24px;">
-                  <div style="background-color: #fdf8f3; border: 1px solid #f0e6d8; border-radius: 12px; padding: 16px 20px; display: inline-block;">
-                    <span style="font-size: 12px; color: #5a4635; text-transform: uppercase; letter-spacing: 1px;">Order ID</span>
-                    <br>
-                    <span style="font-size: 18px; font-weight: 700; color: #c8956c; font-family: monospace;">${orderId}</span>
-                  </div>
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="background-color: #fdf8f3; border: 1px solid #f0e6d8; border-radius: 12px; padding: 16px 20px; width: 48%;">
+                        <span style="font-size: 11px; color: #5a4635; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Order ID</span>
+                        <br>
+                        <span style="font-size: 18px; font-weight: 700; color: #c8956c; font-family: monospace;">${orderId}</span>
+                      </td>
+                      <td style="width: 4%"></td>
+                      <td style="background-color: #fdf8f3; border: 1px solid #f0e6d8; border-radius: 12px; padding: 16px 20px; width: 48%;">
+                        <span style="font-size: 11px; color: #5a4635; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Order Date</span>
+                        <br>
+                        <span style="font-size: 14px; font-weight: 600; color: #2d2016;">${orderDate}</span>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
 
               <!-- Items Table -->
               <tr>
                 <td style="padding: 0 40px 24px;">
+                  <p style="margin: 0 0 12px; font-size: 12px; font-weight: 700; color: #5a4635; text-transform: uppercase; letter-spacing: 1px;">Order Details</p>
                   <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #f0e6d8; border-radius: 12px; overflow: hidden;">
                     <tr style="background-color: #fdf8f3;">
-                      <td style="padding: 10px 16px; font-size: 12px; font-weight: 600; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px;">Item</td>
-                      <td style="padding: 10px 16px; font-size: 12px; font-weight: 600; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">Qty</td>
-                      <td style="padding: 10px 16px; font-size: 12px; font-weight: 600; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">Amount</td>
+                      <td style="padding: 10px 16px; font-size: 11px; font-weight: 700; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px;">Item</td>
+                      <td style="padding: 10px 16px; font-size: 11px; font-weight: 700; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">Qty</td>
+                      <td style="padding: 10px 16px; font-size: 11px; font-weight: 700; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">Amount</td>
                     </tr>
                     ${itemsRows}
                   </table>
@@ -94,16 +112,37 @@ export async function POST(req: NextRequest) {
                 <td style="padding: 0 40px 24px;">
                   <table width="100%" cellpadding="0" cellspacing="0">
                     <tr>
-                      <td style="padding: 4px 0; font-size: 14px; color: #5a4635;">Subtotal</td>
-                      <td style="padding: 4px 0; font-size: 14px; color: #5a4635; text-align: right;">₹${subtotal}</td>
+                      <td style="padding: 6px 0; font-size: 14px; color: #5a4635;">Subtotal</td>
+                      <td style="padding: 6px 0; font-size: 14px; color: #5a4635; text-align: right;">₹${subtotal}</td>
                     </tr>
                     <tr>
-                      <td style="padding: 4px 0; font-size: 14px; color: #5a4635;">Delivery (${deliveryMethod === "express" ? "Express" : "Standard"})</td>
-                      <td style="padding: 4px 0; font-size: 14px; color: #5a4635; text-align: right;">${deliveryCost === 0 ? "Free" : `₹${deliveryCost}`}</td>
+                      <td style="padding: 6px 0; font-size: 14px; color: #5a4635;">Delivery (${deliveryMethod === "express" ? "Express" : "Standard"})</td>
+                      <td style="padding: 6px 0; font-size: 14px; color: #5a4635; text-align: right;">${deliveryCost === 0 ? "Free" : `₹${deliveryCost}`}</td>
                     </tr>
                     <tr>
-                      <td style="padding: 12px 0 0; font-size: 18px; font-weight: 700; color: #2d2016; border-top: 2px solid #f0e6d8;">Total</td>
-                      <td style="padding: 12px 0 0; font-size: 18px; font-weight: 700; color: #2d2016; text-align: right; border-top: 2px solid #f0e6d8;">₹${total}</td>
+                      <td style="padding: 14px 0 0; font-size: 20px; font-weight: 700; color: #2d2016; border-top: 2px solid #f0e6d8;">Total Paid</td>
+                      <td style="padding: 14px 0 0; font-size: 20px; font-weight: 700; color: #2d2016; text-align: right; border-top: 2px solid #f0e6d8;">₹${total}</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- Payment & Delivery Info -->
+              <tr>
+                <td style="padding: 0 40px 24px;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="background-color: #fdf8f3; border: 1px solid #f0e6d8; border-radius: 12px; padding: 16px 20px; width: 48%;">
+                        <p style="margin: 0 0 4px; font-size: 11px; font-weight: 700; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px;">Payment Method</p>
+                        <p style="margin: 0; font-size: 14px; color: #2d2016; font-weight: 600;">UPI Payment</p>
+                        <p style="margin: 4px 0 0; font-size: 12px; color: #c8956c;">✓ Screenshot submitted</p>
+                      </td>
+                      <td style="width: 4%"></td>
+                      <td style="background-color: #fdf8f3; border: 1px solid #f0e6d8; border-radius: 12px; padding: 16px 20px; width: 48%;">
+                        <p style="margin: 0 0 4px; font-size: 11px; font-weight: 700; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px;">Delivery Method</p>
+                        <p style="margin: 0; font-size: 14px; color: #2d2016; font-weight: 600;">${deliveryMethod === "express" ? "Express Delivery" : "Standard Delivery"}</p>
+                        <p style="margin: 4px 0 0; font-size: 12px; color: #5a4635;">${deliveryMethod === "express" ? "Same day / Next day" : "Wed & Sun schedule"}</p>
+                      </td>
                     </tr>
                   </table>
                 </td>
@@ -113,11 +152,36 @@ export async function POST(req: NextRequest) {
               <tr>
                 <td style="padding: 0 40px 24px;">
                   <div style="background-color: #fdf8f3; border: 1px solid #f0e6d8; border-radius: 12px; padding: 16px 20px;">
-                    <p style="margin: 0 0 4px; font-size: 12px; font-weight: 600; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px;">Delivering to</p>
-                    <p style="margin: 0; font-size: 14px; color: #2d2016; font-weight: 600;">${address.fullName}</p>
-                    <p style="margin: 4px 0 0; font-size: 13px; color: #5a4635;">${address.address}, ${address.city}, ${address.state} - ${address.pincode}</p>
-                    <p style="margin: 4px 0 0; font-size: 13px; color: #5a4635;">${address.phone}</p>
+                    <p style="margin: 0 0 4px; font-size: 11px; font-weight: 700; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px;">Delivering to</p>
+                    <p style="margin: 0; font-size: 15px; color: #2d2016; font-weight: 600;">${address.fullName}</p>
+                    <p style="margin: 6px 0 0; font-size: 13px; color: #5a4635;">${address.address}, ${address.city}, ${address.state} - ${address.pincode}</p>
+                    <p style="margin: 4px 0 0; font-size: 13px; color: #5a4635;">📞 ${address.phone}</p>
+                    ${address.email ? `<p style="margin: 4px 0 0; font-size: 13px; color: #5a4635;">✉️ ${address.email}</p>` : ""}
                   </div>
+                </td>
+              </tr>
+
+              <!-- What's Next -->
+              <tr>
+                <td style="padding: 0 40px 24px;">
+                  <div style="background: linear-gradient(135deg, #c8956c15, #c8956c08); border: 1px solid #c8956c30; border-radius: 12px; padding: 20px;">
+                    <p style="margin: 0 0 8px; font-size: 14px; color: #2d2016; font-weight: 700;">What happens next? 📦</p>
+                    <p style="margin: 0; font-size: 13px; color: #5a4635; line-height: 1.6;">
+                      We'll verify your payment and begin preparing your treats fresh. You'll receive updates at <strong>${email}</strong>. Your order will be delivered on the next scheduled delivery day.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Thank You -->
+              <tr>
+                <td style="padding: 0 40px 32px; text-align: center;">
+                  <p style="margin: 0; font-size: 16px; color: #2d2016; font-weight: 600;">
+                    Thank you for choosing Dilisshious! 💛
+                  </p>
+                  <p style="margin: 8px 0 0; font-size: 13px; color: #5a4635;">
+                    Every bite is crafted with real ingredients and real love.
+                  </p>
                 </td>
               </tr>
 
@@ -139,12 +203,26 @@ export async function POST(req: NextRequest) {
     </html>
     `;
 
+    const fromAddress = process.env.SMTP_FROM || "Dilisshious <noreply@dilisshious.com>";
+    const adminEmail = process.env.SMTP_USER;
+
+    // Send email to customer
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || "Dilisshious <noreply@dilisshious.com>",
+      from: fromAddress,
       to: email,
       subject: `Order Confirmed — ${orderId} | Dilisshious`,
       html,
     });
+
+    // Send email to admin
+    if (adminEmail && adminEmail !== email) {
+      await transporter.sendMail({
+        from: fromAddress,
+        to: adminEmail,
+        subject: `🆕 New Order — ${orderId} | ${customerName || "Customer"} | ₹${total}`,
+        html,
+      });
+    }
 
     return NextResponse.json({ success: true, message: "Invoice sent" });
   } catch (error: unknown) {

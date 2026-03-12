@@ -1,0 +1,229 @@
+[
+  {
+    "slug": "strawberry-cheesecake-jar",
+    "name": "Strawberry Cheesecake Jar (V/GF)",
+    "tagline": "Gentle indulgence in every spoon.",
+    "category": "Dessert Jars",
+    "image": "/images/strawberry-cheesecake-jar.png",
+    "volumes": [
+      {
+        "label": "150 gms jar",
+        "price": 290,
+        "_id": "69b23fda28f8301368b4ed85"
+      }
+    ],
+    "description": "A soft, creamy cheesecake layered with real strawberries, no artificial flavours, no loud sweetness, just gentle indulgence. This jar is for slow spoons, quiet afternoons, and moments when you want dessert that feels comforting and intentional. Made in small batches, just like it should be.",
+    "ingredients": "Fermented cashew cream, Greek yogurt, fresh strawberries, raw honey, coconut oil, gluten free blend, vanilla extract, lemon",
+    "howToEnjoy": "Best enjoyed chilled. Take a moment. Eat slowly. Let it melt.",
+    "storage": "Refrigerate at all times.",
+    "bestBefore": "3 days from date of manufacture",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Perishable — handle with care.",
+    "tags": [
+      "Vegan",
+      "Gluten-Free"
+    ]
+  },
+  {
+    "slug": "moringa-dust",
+    "name": "Moringa Dust (V/GF)",
+    "tagline": "Slow, intentional, and alive.",
+    "category": "Podi · Condiments",
+    "image": "/images/moringa-dust.png",
+    "volumes": [
+      {
+        "label": "200 gms",
+        "price": 380,
+        "_id": "69b23fda28f8301368b4ed87"
+      }
+    ],
+    "description": "This is moringa the way it was meant to be — slow, intentional, and alive. Our moringa podi is hand-pounded, not machine-blasted, preserving the leaf's natural oils, aroma, and prana. The result is a deeply green, earthy condiment that supports digestion, liver health, skin clarity, and daily vitality. Made the ancestral way, because some things can't be rushed — especially nourishment.",
+    "ingredients": "Sun-dried moringa leaves, roasted chana dal, dried curry leaves, cumin seeds, black pepper, Himalayan salt, cold-pressed coconut oil. No seed oils. No fillers.",
+    "howToEnjoy": "Sprinkle over rice with ghee, add it to your dosa or idlis. Mix into yoghurt or curd with vegetables. Add to your pasta or pizza as a seasoning. Our favourite: Add it on lightly toasted sourdough with a drizzle of coconut oil & a heaped spoon of Moringa dust.",
+    "storage": "Store in a cool, dry place in an airtight container. Avoid moisture.",
+    "bestBefore": "4 months from date of preparation",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Non-perishable — ships in sealed packaging.",
+    "tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Ancestral"
+    ]
+  },
+  {
+    "slug": "organic-basil-pesto",
+    "name": "Organic Basil Pesto (GF)",
+    "tagline": "Fresh. Honest. Deeply satisfying.",
+    "category": "Spreads · Sauces",
+    "image": "/images/organic-basil-pesto.png",
+    "volumes": [
+      {
+        "label": "200 gms",
+        "price": 540,
+        "_id": "69b23fda28f8301368b4ed89"
+      }
+    ],
+    "description": "Bright basil leaves crushed into silky extra virgin olive oil, finished with real aged parmesan and earthy walnuts — this is pesto the old-world way. No shortcuts, no powders, no artificial tang. Just sun, soil, and slow blending. Fresh. Honest. Deeply satisfying.",
+    "ingredients": "Fresh basil leaves, extra virgin olive oil, real parmesan cheese, walnuts, garlic, sea salt",
+    "howToEnjoy": "Toss into warm pasta. Spread over a slice of sourdough. Add to grilled vegetables or to your eggs. Stir into soups for richness.",
+    "storage": "Keep refrigerated in an airtight jar. Always use a clean, dry spoon.",
+    "bestBefore": "2 weeks refrigerated",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Perishable — keep refrigerated upon receipt.",
+    "tags": [
+      "Gluten-Free"
+    ]
+  },
+  {
+    "slug": "pizza-pasta-sauce",
+    "name": "Pizza & Pasta Sauce (GF)",
+    "tagline": "Your shortcut — without cutting corners.",
+    "category": "Spreads · Sauces",
+    "image": "/images/pizza-pasta-sauce.png",
+    "volumes": [
+      {
+        "label": "400 gms",
+        "price": 590,
+        "_id": "69b23fda28f8301368b4ed8b"
+      }
+    ],
+    "description": "Slow-simmered tomatoes, garlic, herbs, and patience. This sauce tastes like an Italian grandmother moved to your kitchen and refused to use preservatives. Naturally sweet, gently tangy, and deeply comforting. Your shortcut — without cutting corners.",
+    "ingredients": "Vine-ripened tomatoes, garlic, onions, extra virgin olive oil, oregano, basil, black pepper, sea salt",
+    "howToEnjoy": "Spread over pizza base. Toss with pasta. Use as shakshuka base. Add to stews for depth.",
+    "storage": "Keep refrigerated. Once opened, consume within 5 days.",
+    "bestBefore": "2 weeks refrigerated",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Perishable — keep refrigerated upon receipt.",
+    "tags": [
+      "No Preservatives",
+      "Gluten-Free"
+    ]
+  },
+  {
+    "slug": "classic-ginger-chilli-jam",
+    "name": "Classic Ginger-Chilli Jam (V/GF)",
+    "tagline": "The kind of jam that doesn't whisper — it sings.",
+    "category": "Spreads · Sauces",
+    "image": "/images/classic-ginger-chilli-jam.png",
+    "volumes": [
+      {
+        "label": "200 gms",
+        "price": 380,
+        "_id": "69b23fda28f8301368b4ed8d"
+      }
+    ],
+    "description": "Sweet heat with a backbone. Fresh ginger and chilli slow-cooked with mineral-rich palm jaggery — warming, bold, and deeply alive. It tingles the tongue and wakes up digestion. The kind of jam that doesn't whisper — it sings.",
+    "ingredients": "Fresh ginger, red chillies, palm jaggery, apple cider vinegar, sea salt",
+    "howToEnjoy": "Pair with cheese boards. Spread over toast. Glaze vegetables. Add to stir-fries for kick.",
+    "storage": "Keep refrigerated after opening. Always use a dry spoon.",
+    "bestBefore": "2 months refrigerated",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Ships in sealed packaging.",
+    "tags": [
+      "Vegan",
+      "Gluten-Free"
+    ]
+  },
+  {
+    "slug": "adaptogenic-protein-bars",
+    "name": "Adaptogenic Protein Bars (V/GF)",
+    "tagline": "Fuel that feels steady, not spiky.",
+    "category": "Bars · Snacks",
+    "image": "/images/adaptogenic-protein-bars.png",
+    "volumes": [
+      {
+        "label": "Pack of 6",
+        "price": 720,
+        "_id": "69b23fda28f8301368b4ed8f"
+      },
+      {
+        "label": "Pack of 12",
+        "price": 1380,
+        "_id": "69b23fda28f8301368b4ed90"
+      }
+    ],
+    "description": "Dense, nourishing, and intelligently indulgent. These aren't \"diet bars.\" They're strength bars. Creamy coconut, crunchy seeds, rich cacao, and high-quality whey protein — enhanced with ashwagandha and brahmi for calm focus and resilience. Fuel that feels steady, not spiky.",
+    "ingredients": "Coconut, cashews, pumpkin seeds, raw cacao, whey protein, ashwagandha, brahmi, natural sweetener dates, sea salt",
+    "howToEnjoy": "Pre-workout fuel. Midday stabiliser. Travel companion. Post-yoga nourishment.",
+    "storage": "Store in refrigerator. Can stay at room temperature for up to 6 hours.",
+    "bestBefore": "4 weeks refrigerated",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Ships in insulated packaging.",
+    "tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Adaptogenic"
+    ]
+  },
+  {
+    "slug": "sun-dried-tomato-hummus",
+    "name": "Sun-Dried Tomato Hummus Spread (V/GF)",
+    "tagline": "A gut-friendly classic with a bold twist.",
+    "category": "Spreads · Sauces",
+    "image": "/images/sun-dried-tomato-hummus.png",
+    "volumes": [
+      {
+        "label": "330 gms",
+        "price": 590,
+        "_id": "69b23fda28f8301368b4ed92"
+      }
+    ],
+    "description": "Creamy, protein-rich hummus elevated with sun-dried tomatoes — tangy, earthy, and deeply satisfying. It's the kind of spread that turns simple bread into something intentional. A gut-friendly classic with a bold twist.",
+    "ingredients": "Chickpeas, sun-dried tomatoes, tahini, garlic, extra virgin olive oil, lemon juice, sea salt",
+    "howToEnjoy": "Spread on toast or wraps. Pair with vegetable sticks. Add to grain bowls. Use as sandwich base.",
+    "storage": "Keep refrigerated in airtight container.",
+    "bestBefore": "5–6 days refrigerated",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Perishable — keep refrigerated upon receipt.",
+    "tags": [
+      "Vegan",
+      "Gluten-Free"
+    ]
+  },
+  {
+    "slug": "gluten-free-banana-bread",
+    "name": "Gluten-Free Banana Bread (GF)",
+    "tagline": "Comfort food — upgraded.",
+    "category": "Baked · Breads",
+    "image": "/images/gluten-free-banana-bread.png",
+    "volumes": [
+      {
+        "label": "400 gms loaf",
+        "price": 520,
+        "_id": "69b23fda28f8301368b4ed94"
+      }
+    ],
+    "description": "Moist, lightly sweet, and mineral-rich — this banana bread is made with our FG blend, designed to nourish beyond flavour. Naturally sweetened, rich in B vitamins and essential minerals, and beautifully grounding. Comfort food — upgraded.",
+    "ingredients": "FG gluten-free flour blend, ripe bananas, eggs, milk, butter, natural sweetener (jaggery/raw honey), baking soda, cinnamon, sea salt",
+    "howToEnjoy": "Breakfast with coffee. Post-workout carb recharge. Evening chai companion.",
+    "storage": "Store refrigerated in airtight container. Warm slightly before serving for best texture.",
+    "bestBefore": "3 days at room temperature & 7 days refrigerated",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Perishable — handle with care. Refrigerate upon receipt.",
+    "tags": [
+      "Gluten-Free",
+      "Refined Sugar Free",
+      "Contains Egg & Milk"
+    ]
+  },
+  {
+    "slug": "gourmet-brown-butter-cookies",
+    "name": "Gourmet Brown Butter Cookies",
+    "tagline": "Crisp edges. Soft centre. Worth every bite.",
+    "category": "Cookies",
+    "image": "/images/gourmet-brown-butter-cookies.png",
+    "volumes": [
+      {
+        "label": "Pack of 4",
+        "price": 480,
+        "_id": "69b23fda28f8301368b4ed82"
+      },
+      {
+        "label": "Pack of 8",
+        "price": 920,
+        "_id": "69b23fda28f8301368b4ed83"
+      }
+    ],
+    "description": "These cookies begin with patience. We slowly brown the butter until it turns nutty, aromatic, and golden, then fold it into a dough that's crisp on the edges, soft at the centre filled with a mix of organically sourced dark & milk chocolate. Each bite tastes like warmth, nostalgia, and a quiet luxury you didn't know you needed. This is not a \"guilt-free\" cookie. It's a worth-it cookie.",
+    "ingredients": "Browned butter, organic flour, raw sugar & jaggery, eggs, natural vanilla, baking soda, Himalayan salt",
+    "howToEnjoy": "Perfect with black coffee, cup of cold milk, evening tea, or eaten straight from the jar while standing in your kitchen.",
+    "storage": "Store in an airtight container at room temperature.",
+    "bestBefore": "7 days from date of manufacture",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed.",
+    "tags": [
+      "Bestseller"
+    ]
+  }
+]

@@ -13,6 +13,10 @@ import {
   ShieldCheck,
   Loader2,
   ExternalLink,
+  Upload,
+  Copy,
+  CheckCircle,
+  X,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -24,7 +28,11 @@ export default function PaymentPage() {
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [placing, setPlacing] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [paymentScreenshot, setPaymentScreenshot] = useState<string | null>(null);
+  const [screenshotName, setScreenshotName] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const qrGenerated = useRef(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const deliveryCost =
     data.deliveryMethod === "express" ? 49
@@ -61,7 +69,41 @@ export default function PaymentPage() {
     });
   }, [upiString, total]);
 
+  const handleCopyUpi = async () => {
+    try {
+      await navigator.clipboard.writeText(upiId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback
+      const ta = document.createElement("textarea");
+      ta.value = upiId;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleScreenshotUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File size must be under 5MB");
+      return;
+    }
+    setScreenshotName(file.name);
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPaymentScreenshot(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handlePlaceOrder = async () => {
+    if (!paymentScreenshot) return;
     setPlacing(true);
     try {
       // 1. Create order in DB
@@ -76,6 +118,7 @@ export default function PaymentPage() {
           subtotal,
           total,
           paymentMethod: "upi",
+          paymentScreenshot,
         }),
       });
 
@@ -198,46 +241,126 @@ export default function PaymentPage() {
               </p>
             </div>
 
-            {/* UPI Deep Links (Mobile) */}
-            {isMobile && (
-              <div className="space-y-2 mb-6">
-                <p className="text-xs font-semibold text-[#5a4635] uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <Smartphone size={14} />
-                  Pay with App
-                </p>
-                <div className="grid grid-cols-3 gap-2">
-                  <a
-                    href={`gpay://upi/pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${total}&cu=INR`}
-                    className="flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 border-[#f0e6d8] hover:border-[#c8956c]/40 transition-all text-center"
+            {/* UPI Payment Options */}
+            <div className="mb-6">
+              <p className="text-xs font-semibold text-[#5a4635] uppercase tracking-wider mb-3 flex items-center gap-2">
+                <Smartphone size={14} />
+                Pay with App
+              </p>
+              <div className="space-y-2">
+                <a
+                  href={`gpay://upi/pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${total}&cu=INR`}
+                  className="flex items-center gap-3 p-3 rounded-xl border-2 border-[#f0e6d8] hover:border-[#c8956c]/40 hover:bg-[#fdf8f3] transition-all"
+                >
+                  <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-lg font-bold text-blue-600 shrink-0">
+                    G
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-sm font-semibold text-[#2d2016]">Google Pay</span>
+                    <p className="text-[11px] text-[#5a4635]/50">Open in Google Pay app</p>
+                  </div>
+                  <ExternalLink size={14} className="text-[#5a4635]/40" />
+                </a>
+                <a
+                  href={`phonepe://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${total}&cu=INR`}
+                  className="flex items-center gap-3 p-3 rounded-xl border-2 border-[#f0e6d8] hover:border-[#c8956c]/40 hover:bg-[#fdf8f3] transition-all"
+                >
+                  <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-lg font-bold text-purple-600 shrink-0">
+                    P
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-sm font-semibold text-[#2d2016]">PhonePe</span>
+                    <p className="text-[11px] text-[#5a4635]/50">Open in PhonePe app</p>
+                  </div>
+                  <ExternalLink size={14} className="text-[#5a4635]/40" />
+                </a>
+                <a
+                  href={`paytmmp://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${total}&cu=INR`}
+                  className="flex items-center gap-3 p-3 rounded-xl border-2 border-[#f0e6d8] hover:border-[#c8956c]/40 hover:bg-[#fdf8f3] transition-all"
+                >
+                  <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-lg font-bold text-sky-600 shrink-0">
+                    T
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-sm font-semibold text-[#2d2016]">Paytm</span>
+                    <p className="text-[11px] text-[#5a4635]/50">Open in Paytm app</p>
+                  </div>
+                  <ExternalLink size={14} className="text-[#5a4635]/40" />
+                </a>
+                <button
+                  onClick={handleCopyUpi}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl border-2 border-dashed border-[#f0e6d8] hover:border-[#c8956c]/40 hover:bg-[#fdf8f3] transition-all"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#fdf8f3] border border-[#f0e6d8] flex items-center justify-center shrink-0">
+                    {copied ? <CheckCircle size={18} className="text-green-500" /> : <Copy size={18} className="text-[#c8956c]" />}
+                  </div>
+                  <div className="flex-1 text-left">
+                    <span className="text-sm font-semibold text-[#2d2016]">{copied ? "Copied!" : "Copy UPI ID"}</span>
+                    <p className="text-[11px] text-[#5a4635]/50 font-mono">{upiId}</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Screenshot Upload */}
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#f0e6d8] shadow-sm mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-[#c8956c]/10 flex items-center justify-center">
+                <Upload size={18} className="text-[#c8956c]" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-[#2d2016]" style={{ fontFamily: "var(--font-heading)" }}>
+                  Payment Screenshot
+                </h2>
+                <p className="text-xs text-[#5a4635]/60">Upload proof of payment (required)</p>
+              </div>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleScreenshotUpload}
+              className="hidden"
+              id="payment-screenshot"
+            />
+
+            {paymentScreenshot ? (
+              <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={paymentScreenshot}
+                  alt="Payment screenshot"
+                  className="w-full max-h-[300px] object-contain rounded-xl border-2 border-[#f0e6d8] bg-[#fdf8f3]"
+                />
+                <div className="flex items-center justify-between mt-3">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle size={16} className="text-green-500" />
+                    <span className="text-sm text-green-600 font-medium">{screenshotName || "Screenshot uploaded"}</span>
+                  </div>
+                  <button
+                    onClick={() => { setPaymentScreenshot(null); setScreenshotName(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
+                    className="text-xs text-red-400 hover:text-red-600 flex items-center gap-1 transition-colors"
                   >
-                    <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-lg font-bold text-blue-600">
-                      G
-                    </div>
-                    <span className="text-[11px] font-medium text-[#2d2016]">Google Pay</span>
-                    <ExternalLink size={10} className="text-[#5a4635]/40" />
-                  </a>
-                  <a
-                    href={`phonepe://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${total}&cu=INR`}
-                    className="flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 border-[#f0e6d8] hover:border-[#c8956c]/40 transition-all text-center"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-lg font-bold text-purple-600">
-                      P
-                    </div>
-                    <span className="text-[11px] font-medium text-[#2d2016]">PhonePe</span>
-                    <ExternalLink size={10} className="text-[#5a4635]/40" />
-                  </a>
-                  <a
-                    href={`paytmmp://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${total}&cu=INR`}
-                    className="flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 border-[#f0e6d8] hover:border-[#c8956c]/40 transition-all text-center"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-lg font-bold text-sky-600">
-                      T
-                    </div>
-                    <span className="text-[11px] font-medium text-[#2d2016]">Paytm</span>
-                    <ExternalLink size={10} className="text-[#5a4635]/40" />
-                  </a>
+                    <X size={14} />
+                    Remove
+                  </button>
                 </div>
               </div>
+            ) : (
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full p-8 rounded-xl border-2 border-dashed border-[#f0e6d8] hover:border-[#c8956c]/60 bg-[#fdf8f3] hover:bg-[#c8956c]/5 transition-all flex flex-col items-center gap-3 group"
+              >
+                <div className="w-14 h-14 rounded-full bg-[#c8956c]/10 group-hover:bg-[#c8956c]/20 flex items-center justify-center transition-colors">
+                  <Upload size={24} className="text-[#c8956c]" />
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-semibold text-[#2d2016]">Tap to upload screenshot</p>
+                  <p className="text-xs text-[#5a4635]/50 mt-1">PNG, JPG up to 5MB</p>
+                </div>
+              </button>
             )}
           </div>
 
@@ -275,8 +398,8 @@ export default function PaymentPage() {
 
           <button
             onClick={handlePlaceOrder}
-            disabled={placing}
-            className="w-full py-3.5 bg-[#2d2016] text-white font-semibold rounded-xl hover:bg-[#1a120d] transition-all duration-300 hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-60"
+            disabled={placing || !paymentScreenshot}
+            className="w-full py-3.5 bg-[#2d2016] text-white font-semibold rounded-xl hover:bg-[#1a120d] transition-all duration-300 hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {placing ? (
               <>
@@ -290,6 +413,12 @@ export default function PaymentPage() {
               </>
             )}
           </button>
+
+          {!paymentScreenshot && (
+            <p className="text-xs text-center text-amber-600 mt-2">
+              Please upload your payment screenshot to place the order
+            </p>
+          )}
 
           <div className="flex items-center justify-center gap-2 mt-3">
             <Check size={14} className="text-green-500" />

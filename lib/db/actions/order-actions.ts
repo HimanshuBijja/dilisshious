@@ -12,6 +12,7 @@ export async function createOrder(data: {
   subtotal: number;
   total: number;
   paymentMethod: string;
+  paymentScreenshot?: string;
 }): Promise<IOrder> {
   await connectDB();
   const order = await Order.create({
