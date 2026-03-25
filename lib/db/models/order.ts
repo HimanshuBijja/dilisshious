@@ -22,6 +22,8 @@ export interface IOrder extends Document {
     state: string;
     pincode: string;
     formattedAddress?: string;
+    latitude?: number;
+    longitude?: number;
   };
   deliveryMethod: "standard" | "express";
   deliveryCost: number;
@@ -59,6 +61,8 @@ const OrderSchema = new Schema<IOrder>(
       state: { type: String, required: true },
       pincode: { type: String, required: true },
       formattedAddress: { type: String },
+      latitude: { type: Number },
+      longitude: { type: Number },
     },
     deliveryMethod: {
       type: String,

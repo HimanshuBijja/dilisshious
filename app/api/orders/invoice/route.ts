@@ -172,6 +172,8 @@ export async function POST(req: NextRequest) {
                     <p style="margin: 0 0 4px; font-size: 11px; font-weight: 700; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px;">Delivering to</p>
                     <p style="margin: 0; font-size: 15px; color: #2d2016; font-weight: 600;">${escapeHtml(address.fullName)}</p>
                     <p style="margin: 6px 0 0; font-size: 13px; color: #5a4635;">${escapeHtml(address.address)}, ${escapeHtml(address.city)}, ${escapeHtml(address.state)} - ${escapeHtml(address.pincode)}</p>
+                    ${address.formattedAddress ? `<p style="margin: 4px 0 0; font-size: 12px; color: #5a4635; font-style: italic;">📍 ${escapeHtml(address.formattedAddress)}</p>` : ""}
+                    ${address.latitude && address.longitude ? `<p style="margin: 4px 0 0;"><a href="https://www.google.com/maps?q=${address.latitude},${address.longitude}" target="_blank" style="font-size: 12px; color: #c8956c; text-decoration: underline;">View on Google Maps</a></p>` : ""}
                     <p style="margin: 4px 0 0; font-size: 13px; color: #5a4635;">📞 ${escapeHtml(address.phone)}</p>
                     ${address.email ? `<p style="margin: 4px 0 0; font-size: 13px; color: #5a4635;">✉️ ${escapeHtml(address.email)}</p>` : ""}
                   </div>
