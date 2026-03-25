@@ -20,7 +20,7 @@ import {
   ChevronRight,
   ChevronDown,
   Truck,
-  Heart as HeartIcon,
+
   BadgePercent,
   X,
   Instagram,
@@ -186,9 +186,6 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
                   </button>
                 </div>
 
-                <button className="p-3 border-2 border-gray-200 rounded-xl hover:border-red-300 hover:text-red-400 transition-colors text-gray-400">
-                  <HeartIcon size={18} />
-                </button>
               </div>
 
               <button

@@ -20,47 +20,68 @@ const testimonials = [
 
 export default function TestimonialsSection() {
   return (
-    <section id="testimonials" className="py-20 sm:py-28 px-4 bg-white">
-      <div className="max-w-6xl mx-auto">
+    <section id="testimonials" className="relative py-20 sm:py-28 px-4 bg-white overflow-hidden">
+      {/* Subtle background accent */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#c8956c]/[0.03] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+
+      <div className="relative max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <span className="inline-block text-xs font-semibold text-[#c8956c] uppercase tracking-[0.2em] mb-3">
+          <span className="inline-block text-xs font-semibold text-[#c8956c] uppercase tracking-[0.25em] mb-4">
             What People Say
           </span>
           <h2
-            className="text-4xl sm:text-5xl font-bold text-[#2d2016]"
+            className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-[#2d2016] mb-4"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             Real Love, Real Words
           </h2>
+          <div className="flex items-center justify-center gap-3">
+            <span className="h-px w-12 bg-[#c8956c]/40" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#c8956c]" />
+            <span className="h-px w-12 bg-[#c8956c]/40" />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {testimonials.map((t, i) => (
             <div
               key={i}
-              className="bg-[#fdf8f3] rounded-2xl p-6 sm:p-8 border border-[#f0e6d8] hover:shadow-lg transition-shadow duration-300"
+              className={`relative bg-[#fdf8f3] rounded-2xl p-6 sm:p-8 border border-[#f0e6d8] hover:shadow-lg hover:shadow-[#c8956c]/5 transition-all duration-500 ${
+                i === 1 ? "md:-translate-y-4" : ""
+              }`}
             >
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, j) => (
-                  <Star
-                    key={j}
-                    size={16}
-                    className="fill-[#c8956c] text-[#c8956c]"
-                  />
-                ))}
-              </div>
-              <p className="text-[#5a4635] leading-relaxed mb-6 text-sm italic">
-                &ldquo;{t.text}&rdquo;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#c8956c]/20 flex items-center justify-center text-[#c8956c] font-bold text-sm">
-                  {t.name[0]}
+              {/* Decorative quote */}
+              <span
+                className="absolute top-4 right-5 text-6xl sm:text-7xl text-[#c8956c]/10 leading-none select-none pointer-events-none"
+                style={{ fontFamily: "var(--font-heading)" }}
+                aria-hidden="true"
+              >
+                &ldquo;
+              </span>
+
+              <div className="relative">
+                <div className="flex gap-0.5 mb-4">
+                  {[...Array(5)].map((_, j) => (
+                    <Star
+                      key={j}
+                      size={14}
+                      className="fill-[#c8956c] text-[#c8956c]"
+                    />
+                  ))}
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-[#2d2016]">
-                    {t.name}
-                  </p>
-                  <p className="text-xs text-gray-400">{t.location}</p>
+                <p className="text-[#5a4635] leading-relaxed mb-6 text-sm sm:text-[15px]">
+                  &ldquo;{t.text}&rdquo;
+                </p>
+                <div className="flex items-center gap-3 pt-4 border-t border-[#f0e6d8]">
+                  <div className="w-10 h-10 rounded-full bg-[#c8956c]/15 flex items-center justify-center text-[#c8956c] font-semibold text-sm">
+                    {t.name[0]}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[#2d2016]">
+                      {t.name}
+                    </p>
+                    <p className="text-xs text-[#5a4635]/50">{t.location}</p>
+                  </div>
                 </div>
               </div>
             </div>

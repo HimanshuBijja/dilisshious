@@ -28,17 +28,17 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#f0e6d8]">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#fdf8f3]/85 backdrop-blur-xl border-b border-[#e8d5c0]/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <span
-              className="text-2xl sm:text-3xl font-bold tracking-tight"
+              className="text-2xl sm:text-[2rem] font-semibold tracking-tight"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <span className="text-[#2d2016]">Dilissh</span>
-              <span className="text-[#c8956c]">ious</span>
+              <span className="text-[#c8956c] italic">ious</span>
             </span>
           </Link>
 
