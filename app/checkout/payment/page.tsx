@@ -12,13 +12,14 @@ import {
   Check,
   ShieldCheck,
   Loader2,
-  ExternalLink,
+  
   Upload,
   Copy,
   CheckCircle,
   X,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -250,59 +251,34 @@ export default function PaymentPage() {
                   <Smartphone size={14} />
                   Pay with App
                 </p>
-                <div className="space-y-2">
-                  <a
-                    href={`gpay://upi/pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${total}&cu=INR`}
-                    className="flex items-center gap-3 p-3 rounded-xl border-2 border-[#f0e6d8] hover:border-[#c8956c]/40 hover:bg-[#fdf8f3] transition-all"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-lg font-bold text-blue-600 shrink-0">
-                      G
-                    </div>
-                    <div className="flex-1">
-                      <span className="text-sm font-semibold text-[#2d2016]">Google Pay</span>
-                      <p className="text-[11px] text-[#5a4635]/50">Open in Google Pay app</p>
-                    </div>
-                    <ExternalLink size={14} className="text-[#5a4635]/40" />
-                  </a>
-                  <a
-                    href={`phonepe://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${total}&cu=INR`}
-                    className="flex items-center gap-3 p-3 rounded-xl border-2 border-[#f0e6d8] hover:border-[#c8956c]/40 hover:bg-[#fdf8f3] transition-all"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-lg font-bold text-purple-600 shrink-0">
-                      P
-                    </div>
-                    <div className="flex-1">
-                      <span className="text-sm font-semibold text-[#2d2016]">PhonePe</span>
-                      <p className="text-[11px] text-[#5a4635]/50">Open in PhonePe app</p>
-                    </div>
-                    <ExternalLink size={14} className="text-[#5a4635]/40" />
-                  </a>
-                  <a
-                    href={`paytmmp://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${total}&cu=INR`}
-                    className="flex items-center gap-3 p-3 rounded-xl border-2 border-[#f0e6d8] hover:border-[#c8956c]/40 hover:bg-[#fdf8f3] transition-all"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-lg font-bold text-sky-600 shrink-0">
-                      T
-                    </div>
-                    <div className="flex-1">
-                      <span className="text-sm font-semibold text-[#2d2016]">Paytm</span>
-                      <p className="text-[11px] text-[#5a4635]/50">Open in Paytm app</p>
-                    </div>
-                    <ExternalLink size={14} className="text-[#5a4635]/40" />
-                  </a>
-                  <button
-                    onClick={handleCopyUpi}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl border-2 border-dashed border-[#f0e6d8] hover:border-[#c8956c]/40 hover:bg-[#fdf8f3] transition-all"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-[#fdf8f3] border border-[#f0e6d8] flex items-center justify-center shrink-0">
-                      {copied ? <CheckCircle size={18} className="text-green-500" /> : <Copy size={18} className="text-[#c8956c]" />}
-                    </div>
-                    <div className="flex-1 text-left">
-                      <span className="text-sm font-semibold text-[#2d2016]">{copied ? "Copied!" : "Copy UPI ID"}</span>
-                      <p className="text-[11px] text-[#5a4635]/50 font-mono">{upiId}</p>
-                    </div>
-                  </button>
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { name: "Google Pay", logo: "/payment_logos/google-pay.png", scheme: "gpay" },
+                    { name: "PhonePe", logo: "/payment_logos/phonepe.png", scheme: "phonepe" },
+                    { name: "Paytm", logo: "/payment_logos/paytm.png", scheme: "paytmmp" },
+                  ].map((app) => (
+                    <a
+                      key={app.scheme}
+                      href={`${app.scheme}://upi/pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${total}&cu=INR`}
+                      className="flex flex-col items-center justify-center gap-2 p-4 sm:p-5 rounded-2xl border-2 border-[#f0e6d8] hover:border-[#c8956c] hover:shadow-md bg-white transition-all duration-200 group"
+                    >
+                      <div className="">
+                        <Image src={app.logo} alt={app.name} width={56} height={56} className="object-contain" />
+                      </div>
+                      {/* <span className="text-[11px] sm:text-xs font-semibold text-[#2d2016]">{app.name}</span> */}
+                    </a>
+                  ))}
                 </div>
+
+                {/* Copy UPI ID */}
+                <button
+                  onClick={handleCopyUpi}
+                  className="w-full mt-3 flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-dashed border-[#f0e6d8] hover:border-[#c8956c]/40 hover:bg-[#fdf8f3] transition-all"
+                >
+                  {copied ? <CheckCircle size={16} className="text-green-500" /> : <Copy size={16} className="text-[#c8956c]" />}
+                  <span className="text-sm font-semibold text-[#2d2016]">{copied ? "Copied!" : "Copy UPI ID"}</span>
+                  <span className="text-[11px] text-[#5a4635]/50 font-mono">{upiId}</span>
+                </button>
               </div>
             </div>
 
