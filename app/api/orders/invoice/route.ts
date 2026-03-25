@@ -3,6 +3,14 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import nodemailer from "nodemailer";
 
+function escapeHtml(str: string): string {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 export async function POST(req: NextRequest) {
   try {
     // Get the customer's actual email from the server-side session (Google sign-in)
@@ -36,7 +44,7 @@ export async function POST(req: NextRequest) {
       .map(
         (item: { name: string; volume: string; quantity: number; price: number }) =>
           `<tr>
-            <td style="padding: 12px 16px; border-bottom: 1px solid #f0e6d8; font-size: 14px; color: #2d2016;">${item.name} <span style="color: #5a4635; font-size: 12px;">(${item.volume})</span></td>
+            <td style="padding: 12px 16px; border-bottom: 1px solid #f0e6d8; font-size: 14px; color: #2d2016;">${escapeHtml(item.name)} <span style="color: #5a4635; font-size: 12px;">(${escapeHtml(item.volume)})</span></td>
             <td style="padding: 12px 16px; border-bottom: 1px solid #f0e6d8; text-align: center; font-size: 14px; color: #2d2016;">${item.quantity}</td>
             <td style="padding: 12px 16px; border-bottom: 1px solid #f0e6d8; text-align: right; font-size: 14px; font-weight: 600; color: #2d2016;">₹${item.price * item.quantity}</td>
           </tr>`
@@ -162,10 +170,10 @@ export async function POST(req: NextRequest) {
                 <td style="padding: 0 40px 24px;">
                   <div style="background-color: #fdf8f3; border: 1px solid #f0e6d8; border-radius: 12px; padding: 16px 20px;">
                     <p style="margin: 0 0 4px; font-size: 11px; font-weight: 700; color: #5a4635; text-transform: uppercase; letter-spacing: 0.5px;">Delivering to</p>
-                    <p style="margin: 0; font-size: 15px; color: #2d2016; font-weight: 600;">${address.fullName}</p>
-                    <p style="margin: 6px 0 0; font-size: 13px; color: #5a4635;">${address.address}, ${address.city}, ${address.state} - ${address.pincode}</p>
-                    <p style="margin: 4px 0 0; font-size: 13px; color: #5a4635;">📞 ${address.phone}</p>
-                    ${address.email ? `<p style="margin: 4px 0 0; font-size: 13px; color: #5a4635;">✉️ ${address.email}</p>` : ""}
+                    <p style="margin: 0; font-size: 15px; color: #2d2016; font-weight: 600;">${escapeHtml(address.fullName)}</p>
+                    <p style="margin: 6px 0 0; font-size: 13px; color: #5a4635;">${escapeHtml(address.address)}, ${escapeHtml(address.city)}, ${escapeHtml(address.state)} - ${escapeHtml(address.pincode)}</p>
+                    <p style="margin: 4px 0 0; font-size: 13px; color: #5a4635;">📞 ${escapeHtml(address.phone)}</p>
+                    ${address.email ? `<p style="margin: 4px 0 0; font-size: 13px; color: #5a4635;">✉️ ${escapeHtml(address.email)}</p>` : ""}
                   </div>
                 </td>
               </tr>

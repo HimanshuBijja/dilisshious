@@ -143,8 +143,8 @@ export default function OrdersPage() {
 
                 {/* Items */}
                 <div className="space-y-2 mb-4">
-                  {order.items.map((item, j) => (
-                    <div key={j} className="flex items-center gap-3">
+                  {order.items.map((item) => (
+                    <div key={`${item.slug}-${item.volume}`} className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#fdf8f3] border border-[#f0e6d8] shrink-0">
                         <Image
                           src={item.image}

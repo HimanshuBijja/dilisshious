@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useCheckout } from "@/lib/checkout-context";
 import { useCart } from "@/lib/cart-context";
-import { useSession } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowLeft,
@@ -12,11 +11,11 @@ import {
   Check,
   ShieldCheck,
   Loader2,
-  
   Upload,
   Copy,
   CheckCircle,
   X,
+  AlertTriangle,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -25,8 +24,8 @@ export default function PaymentPage() {
   const router = useRouter();
   const { data, setOrderId } = useCheckout();
   const { items, subtotal, clearCart } = useCart();
-  const { data: session } = useSession();
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [orderError, setOrderError] = useState<string | null>(null);
   const [placing, setPlacing] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [paymentScreenshot, setPaymentScreenshot] = useState<string | null>(null);
@@ -158,11 +157,7 @@ export default function PaymentPage() {
       }
     } catch (error) {
       console.error("Order error:", error);
-      // Fallback: still create a local order ID
-      const fallbackId = "DLS" + Date.now().toString(36).toUpperCase();
-      setOrderId(fallbackId);
-      clearCart();
-      router.push("/checkout/confirmed");
+      setOrderError("Something went wrong placing your order. Please try again.");
     } finally {
       setPlacing(false);
     }
@@ -385,8 +380,15 @@ export default function PaymentPage() {
 
               {/* Place Order Button */}
               <div>
+                {orderError && (
+                  <div className="flex items-center gap-2 p-3 mb-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-600">
+                    <AlertTriangle size={16} className="shrink-0" />
+                    <span>{orderError}</span>
+                  </div>
+                )}
+
                 <button
-                  onClick={handlePlaceOrder}
+                  onClick={() => { setOrderError(null); handlePlaceOrder(); }}
                   disabled={placing || !paymentScreenshot}
                   className="w-full py-3.5 bg-[#2d2016] text-white font-semibold rounded-xl hover:bg-[#1a120d] transition-all duration-300 hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >

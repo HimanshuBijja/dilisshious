@@ -308,10 +308,13 @@ export default function CheckoutPage() {
                           {savedAddresses.map((addr) => {
                             const isSelected = data.selectedAddressId === addr._id;
                             return (
-                              <button
+                              <div
                                 key={addr._id}
+                                role="button"
+                                tabIndex={0}
                                 onClick={() => handleSelectSavedAddress(addr)}
-                                className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
+                                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSelectSavedAddress(addr); } }}
+                                className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
                                   isSelected
                                     ? "border-[#c8956c] bg-[#c8956c]/5"
                                     : "border-[#f0e6d8] hover:border-[#c8956c]/40"
@@ -361,7 +364,7 @@ export default function CheckoutPage() {
                                     </div>
                                   </div>
                                 </div>
-                              </button>
+                              </div>
                             );
                           })}
 

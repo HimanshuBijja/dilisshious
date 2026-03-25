@@ -44,7 +44,9 @@ export async function POST(req: NextRequest) {
       await Coupon.updateOne(
         { code: couponCode.toUpperCase() },
         { $inc: { usedCount: 1 } }
-      ).catch(() => {});
+      ).catch((err: unknown) => {
+        console.error("Failed to increment coupon usage:", err);
+      });
     }
 
     return NextResponse.json({

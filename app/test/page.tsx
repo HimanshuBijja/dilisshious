@@ -1,6 +1,3 @@
-import Image from "next/image";
-import { Cookie, Leaf, Star } from "lucide-react";
-
 export default function AboutSection() {
   // Change this one value to recolor the entire shape
   const SHAPE_COLOR = "#C23737"; // Tailwind red-400
