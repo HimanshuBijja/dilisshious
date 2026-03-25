@@ -48,14 +48,14 @@
       "Vegan",
       "Gluten-Free"
     ],
-    "badge": ""
+    "badge": "Bestseller"
   },
   {
     "slug": "organic-basil-pesto",
     "name": "Organic Basil Pesto (GF)",
     "tagline": "Fresh. Honest. Deeply satisfying.",
     "category": "Spreads · Sauces",
-    "image": "/images/organic-basil-pesto.png",
+    "image": "/images/organic-basil-pesto.jpg",
     "volumes": [
       {
         "label": "200 gms",
@@ -79,7 +79,7 @@
     "name": "Pizza & Pasta Sauce (GF)",
     "tagline": "Your shortcut — without cutting corners.",
     "category": "Spreads · Sauces",
-    "image": "/images/pizza-pasta-sauce.png",
+    "image": "/images/pizza-pasta-sauce.jpg",
     "volumes": [
       {
         "label": "400 gms",
@@ -104,7 +104,7 @@
     "name": "Classic Ginger-Chilli Jam (V/GF)",
     "tagline": "The kind of jam that doesn't whisper — it sings.",
     "category": "Spreads · Sauces",
-    "image": "/images/classic-ginger-chilli-jam.png",
+    "image": "/images/classic-ginger-chilli-jam.jpg",
     "volumes": [
       {
         "label": "200 gms",
@@ -129,7 +129,7 @@
     "name": "Adaptogenic Protein Bars (V/GF)",
     "tagline": "Fuel that feels steady, not spiky.",
     "category": "Bars · Snacks",
-    "image": "/images/adaptogenic-protein-bars.png",
+    "image": "/images/adaptogenic-protein-bars.jpg",
     "volumes": [
       {
         "label": "Pack of 6",
@@ -160,7 +160,7 @@
     "name": "Sun-Dried Tomato Hummus Spread (V/GF)",
     "tagline": "A gut-friendly classic with a bold twist.",
     "category": "Spreads · Sauces",
-    "image": "/images/sun-dried-tomato-hummus.png",
+    "image": "/images/sun-dried-tomato-hummus.jpeg",
     "volumes": [
       {
         "label": "330 gms",
@@ -185,7 +185,7 @@
     "name": "Gluten-Free Banana Bread (GF)",
     "tagline": "Comfort food — upgraded.",
     "category": "Baked · Breads",
-    "image": "/images/gluten-free-banana-bread.png",
+    "image": "/images/gluten-free-banana-bread.jpg",
     "volumes": [
       {
         "label": "400 gms loaf",
@@ -211,7 +211,7 @@
     "name": "Orange Peel Jam",
     "tagline": "Citrus sunshine in every spoonful.",
     "category": "Spreads · Sauces",
-    "image": "/images/orange-peel-jam.png",
+    "image": "/images/orange-peel-jam.jpg",
     "volumes": [
       {
         "label": "200 gms",

@@ -40,51 +40,28 @@ export async function POST(request: NextRequest) {
     }
 
     const publicDir = path.join(process.cwd(), "public");
-    const imagesDir = path.join(publicDir, "images");
     const dataDir = path.join(publicDir, "data");
 
-    // Ensure directories exist
-    fs.mkdirSync(imagesDir, { recursive: true });
+    // Ensure data directory exists
     fs.mkdirSync(dataDir, { recursive: true });
 
-    // Download images from Cloudinary
-    let downloadedCount = 0;
-    let failedCount = 0;
+    // Use Cloudinary URLs directly as image sources — no local download needed.
+    // This eliminates the filename mismatch between admin local paths and user site paths.
+    let cloudinaryImageCount = 0;
+    let fallbackImageCount = 0;
 
     for (const product of products) {
       if (product.cloudinaryUrl) {
-        try {
-          const response = await fetch(product.cloudinaryUrl);
-          if (!response.ok) {
-            console.error(`Failed to download image for ${product.slug}: ${response.status}`);
-            failedCount++;
-            continue;
-          }
-
-          // Determine file extension from URL or content type
-          const contentType = response.headers.get("content-type") || "image/png";
-          const extMap: Record<string, string> = {
-            "image/png": "png",
-            "image/jpeg": "jpg",
-            "image/jpg": "jpg",
-            "image/webp": "webp",
-            "image/gif": "gif",
-          };
-          const ext = extMap[contentType] || "png";
-          const filename = `${product.slug}.${ext}`;
-          const filePath = path.join(imagesDir, filename);
-
-          // Write file
-          const buffer = Buffer.from(await response.arrayBuffer());
-          fs.writeFileSync(filePath, buffer);
-
-          // Update the image path to match local file
-          product.image = `/images/${filename}`;
-          downloadedCount++;
-        } catch (err) {
-          console.error(`Error downloading image for ${product.slug}:`, err);
-          failedCount++;
-        }
+        // Use the Cloudinary CDN URL directly — fast, reliable, no download step
+        product.image = product.cloudinaryUrl;
+        cloudinaryImageCount++;
+      } else {
+        // No Cloudinary URL available — keep the existing image path as-is
+        // (this will be whatever was stored in MongoDB)
+        fallbackImageCount++;
+        console.warn(
+          `Product "${product.slug}" has no cloudinaryUrl — using existing image path: ${product.image}`
+        );
       }
     }
 
@@ -118,8 +95,8 @@ export async function POST(request: NextRequest) {
       success: true,
       totalProducts: products.length,
       availableProducts: staticProducts.length,
-      imagesDownloaded: downloadedCount,
-      imagesFailed: failedCount,
+      cloudinaryImages: cloudinaryImageCount,
+      fallbackImages: fallbackImageCount,
     });
   } catch (error) {
     console.error("Sync error:", error);

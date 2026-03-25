@@ -45,7 +45,7 @@ const fallbackProducts: Product[] = [
     name: "Gourmet Brown Butter Cookies",
     tagline: "Crisp edges. Soft centre. Worth every bite.",
     category: "Cookies",
-    image: "/images/cookie-01.png",
+    image: "/images/gourmet-brown-butter-cookies.jpg",
     volumes: [
       { label: "Pack of 4", price: 299, originalPrice: 349 },
       { label: "Pack of 8", price: 549, originalPrice: 649 },
