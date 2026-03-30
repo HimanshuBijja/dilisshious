@@ -19,13 +19,14 @@ export default function IntroScreen() {
 
     const revealTimer = setTimeout(() => setReveal(true), 2600);
 
+    // Slide-away is 0.7s — remove overlay at 3400ms
     const doneTimer = setTimeout(() => {
       setShow(false);
       document.body.style.overflow = "";
       try {
         sessionStorage.setItem("dilisshious-intro", "1");
       } catch {}
-    }, 3900);
+    }, 3600);
 
     return () => {
       clearTimeout(revealTimer);

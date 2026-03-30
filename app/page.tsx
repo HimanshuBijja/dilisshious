@@ -10,8 +10,8 @@ export default function Home() {
       <DeliveryBanner />
       {/* <HeroSection /> */}
       <ProductsSection />
-      <TestimonialsSection />
       <AboutSection />
+      <TestimonialsSection />
     </div>
   );
 }

@@ -273,36 +273,28 @@ body {
 }
 
 @keyframes introWrite {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0% 0 0);
-  }
+  0% { clip-path: inset(0 100% 0 0); }
+  100% { clip-path: inset(0 0% 0 0); }
 }
 
-/* Phase 2: circle collapses to reveal the site */
+/* Phase 2: background shrinks as a circle revealing the app */
 .intro-overlay--reveal {
-  animation: introCircleOut 1.2s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+  animation: introCircleShrink 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .intro-overlay--reveal .intro-overlay__logo {
-  animation: introLogoOut 0.5s ease-in forwards;
+  animation: introLogoOut 0.3s ease-in forwards;
 }
 
-@keyframes introCircleOut {
-  from {
-    clip-path: circle(150% at 50% 50%);
-  }
-  to {
-    clip-path: circle(0% at 50% 50%);
-  }
+@keyframes introCircleShrink {
+  0% { clip-path: circle(150vmax at 50% 50%); }
+  100% { clip-path: circle(0 at 50% 50%); }
 }
 
 @keyframes introLogoOut {
   to {
     opacity: 0;
-    transform: scale(0.85);
+    transform: scale(0.9);
   }
 }
 
