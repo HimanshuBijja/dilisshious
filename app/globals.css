@@ -247,3 +247,68 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* ==================== Intro Splash Screen ==================== */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0e8dc;
+}
+
+.intro-overlay__logo {
+  width: min(65vw, 380px);
+  overflow: hidden;
+}
+
+.intro-overlay__logo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  clip-path: inset(0 100% 0 0);
+  animation: introWrite 2s cubic-bezier(0.25, 0.1, 0.25, 1) 0.3s forwards;
+}
+
+@keyframes introWrite {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0% 0 0);
+  }
+}
+
+/* Phase 2: circle collapses to reveal the site */
+.intro-overlay--reveal {
+  animation: introCircleOut 1.2s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+.intro-overlay--reveal .intro-overlay__logo {
+  animation: introLogoOut 0.5s ease-in forwards;
+}
+
+@keyframes introCircleOut {
+  from {
+    clip-path: circle(150% at 50% 50%);
+  }
+  to {
+    clip-path: circle(0% at 50% 50%);
+  }
+}
+
+@keyframes introLogoOut {
+  to {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+/* Skip the intro for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .intro-overlay {
+    display: none;
+  }
+}

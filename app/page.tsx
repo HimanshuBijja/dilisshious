@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#fdf8f3]">
       <DeliveryBanner />
-      <HeroSection />
+      {/* <HeroSection /> */}
       <ProductsSection />
       <TestimonialsSection />
       <AboutSection />

@@ -7,6 +7,7 @@ import Navbar from "@/components/navbar";
 import CartDrawer from "@/components/cart-drawer";
 import AuthModal from "@/components/auth-modal";
 import Footer from "@/components/footer";
+import IntroScreen from "@/components/intro-screen";
 
 export default function ClientLayout({
   children,
@@ -17,6 +18,7 @@ export default function ClientLayout({
     <AuthProvider>
       <CartProvider>
         <CheckoutProvider>
+          <IntroScreen />
           <Navbar />
           <CartDrawer />
           <AuthModal />

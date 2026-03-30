@@ -32,14 +32,15 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span
-              className="text-2xl sm:text-[2rem] font-semibold tracking-tight"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              <span className="text-[#2d2016]">Dilissh</span>
-              <span className="text-[#c8956c] italic">ious</span>
-            </span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo.png"
+              alt="Dilisshious"
+              width={130}
+              height={84}
+              className="h-16 sm:h-20 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Nav */}
