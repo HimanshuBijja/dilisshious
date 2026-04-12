@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useCheckout } from "@/lib/checkout-context";
 import { useCart } from "@/lib/cart-context";
 import { ArrowLeft, Truck, Zap, Check } from "lucide-react";
@@ -29,8 +30,14 @@ const deliveryOptions = [
 
 export default function DeliveryPage() {
   const router = useRouter();
+  const { status } = useSession();
   const { data, setDeliveryMethod } = useCheckout();
   const { subtotal } = useCart();
+
+  if (status === "unauthenticated") {
+    router.push("/");
+    return null;
+  }
 
   const deliveryCost =
     data.deliveryMethod === "express" ? 70

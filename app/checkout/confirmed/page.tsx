@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useCheckout } from "@/lib/checkout-context";
 import {
   PartyPopper,
@@ -14,7 +15,13 @@ import { motion } from "framer-motion";
 
 export default function OrderConfirmedPage() {
   const router = useRouter();
+  const { status } = useSession();
   const { data, reset } = useCheckout();
+
+  if (status === "unauthenticated") {
+    router.push("/");
+    return null;
+  }
 
   const handleContinueShopping = () => {
     reset();

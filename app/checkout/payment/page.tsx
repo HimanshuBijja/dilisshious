@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useCheckout } from "@/lib/checkout-context";
 import { useCart } from "@/lib/cart-context";
 import { useState, useEffect, useRef } from "react";
@@ -22,8 +23,14 @@ import Image from "next/image";
 
 export default function PaymentPage() {
   const router = useRouter();
+  const { status } = useSession();
   const { data, setOrderId } = useCheckout();
   const { items, subtotal, clearCart } = useCart();
+
+  if (status === "unauthenticated") {
+    router.push("/");
+    return null;
+  }
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [orderError, setOrderError] = useState<string | null>(null);
   const [placing, setPlacing] = useState(false);
