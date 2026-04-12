@@ -1,0 +1,831 @@
+"use client";
+
+import { useState, useCallback, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useCart } from "@/lib/cart-context";
+import { useAuth } from "@/lib/auth-context";
+import Image from "next/image";
+import { ArrowLeft, Check, Plus, Sparkles, X, ChevronLeft, ChevronRight } from "lucide-react";
+
+// ─── Data ────────────────────────────────────────────────────────────────────
+
+type QuestionType = "single" | "multi";
+
+interface Question {
+  id: string;
+  title: string;
+  subtitle: string;
+  type: QuestionType;
+  options: { id: string; label: string; description: string }[];
+}
+
+const QUESTIONS: Question[] = [
+  {
+    id: "q1",
+    title: "What's your primary health concern?",
+    subtitle: "Select all that apply",
+    type: "multi",
+    options: [
+      { id: "energy", label: "Energy", description: "Fatigue, afternoon crash, difficulty starting the day" },
+      { id: "gut", label: "Gut", description: "Bloating, constipation, sluggish digestion" },
+      { id: "hormones", label: "Hormones", description: "Mood swings, PMS, irregular cycles, reactivity" },
+      { id: "skin", label: "Skin & Hair", description: "Dullness, breakouts, hair loss, slow growth" },
+      { id: "liver", label: "Liver", description: "Feeling heavy, puffy, or needing a reset" },
+      { id: "immunity", label: "Immunity", description: "Falling sick often, slow recovery" },
+    ],
+  },
+  {
+    id: "q2",
+    title: "How would you describe your stress & adrenal state?",
+    subtitle: "Pick the one that fits best",
+    type: "single",
+    options: [
+      { id: "wired", label: "Wired but exhausted", description: "Can't switch off, tired but can't rest" },
+      { id: "flat", label: "Flat and unmotivated", description: "Low drive, brain fog, difficulty getting going" },
+      { id: "anxious", label: "Anxious and reactive", description: "Easily overwhelmed, on edge" },
+      { id: "balanced", label: "Mostly balanced", description: "Stress is manageable right now" },
+    ],
+  },
+  {
+    id: "q3",
+    title: "How's your digestion?",
+    subtitle: "Select all that apply",
+    type: "multi",
+    options: [
+      { id: "slow", label: "Slow and constipated", description: "Less than daily, feels incomplete" },
+      { id: "bloated", label: "Bloated after meals", description: "Distension, discomfort, gas" },
+      { id: "irregular", label: "Irregular", description: "Unpredictable, alternating patterns" },
+      { id: "good", label: "Pretty good", description: "No major complaints" },
+    ],
+  },
+  {
+    id: "q4",
+    title: "What's your dietary preference?",
+    subtitle: "This determines your bone broth variant",
+    type: "single",
+    options: [
+      { id: "vegan", label: "Vegan", description: "Fully plant-based" },
+      { id: "vegetarian", label: "Vegetarian", description: "No meat; dairy & egg ok" },
+      { id: "omnivore", label: "Omnivore", description: "Full animal food access" },
+      { id: "flexitarian", label: "Flexitarian", description: "Vegan or non-veg each delivery cycle" },
+    ],
+  },
+  {
+    id: "q5",
+    title: "When do you crash the most?",
+    subtitle: "Pick your worst energy dip",
+    type: "single",
+    options: [
+      { id: "morning", label: "Morning", description: "Hard to wake up, groggy start" },
+      { id: "afternoon", label: "Afternoon", description: "Post-lunch slump, yawning at 3pm" },
+      { id: "evening", label: "Evening", description: "Wired at night, can't wind down" },
+      { id: "allday", label: "All day", description: "Consistently low throughout" },
+    ],
+  },
+  {
+    id: "q6",
+    title: "What's your health goal?",
+    subtitle: "This helps us pick your plan",
+    type: "single",
+    options: [
+      { id: "correct", label: "Correct an imbalance", description: "Something is off, fix it at the root" },
+      { id: "elevate", label: "Elevate my baseline", description: "I feel okay but want to feel truly well" },
+      { id: "maintain", label: "Maintain & sustain", description: "I've done the work, keep it going" },
+    ],
+  },
+];
+
+type BundleId = "GRV" | "HHB" | "GFW" | "PVP";
+type PlanId = "W1" | "BW" | "MO";
+
+interface Bundle {
+  id: BundleId;
+  name: string;
+  focus: string;
+  products: string[];
+  pricing: Record<PlanId, number>;
+}
+
+const BUNDLES: Record<BundleId, Bundle> = {
+  GRV: {
+    id: "GRV",
+    name: "Gut Reset & Vitality",
+    focus: "Gut Health + Energy",
+    products: [
+      "Whole Lemon Shots",
+      "Liver Cleanser Tonic",
+      "Bone Broth (choice)",
+      "Adaptogenic Protein Bar",
+      "Adrenal Cocktail + Trace Minerals",
+      "Cascara Constipation Relief Drink",
+    ],
+    pricing: { W1: 1890, BW: 3290, MO: 5990 },
+  },
+  HHB: {
+    id: "HHB",
+    name: "Hormonal Harmony",
+    focus: "Hormonal Balance",
+    products: [
+      "Adrenal Cocktail + Trace Minerals",
+      "Adaptogenic Protein Bar",
+      "Liver Cleanser Tonic",
+      "Whole Lemon Shots",
+      "Energy Booster Adaptogen Drink",
+      "Bone Broth with Herbs",
+    ],
+    pricing: { W1: 1790, BW: 3090, MO: 5590 },
+  },
+  GFW: {
+    id: "GFW",
+    name: "Glow From Within",
+    focus: "Skin & Hair",
+    products: [
+      "Whole Lemon Shots",
+      "Liver Cleanser Tonic",
+      "Bone Broth (Collagen-rich)",
+      "Moringa Dust",
+      "Adrenal Cocktail",
+      "Toxic-Free Skin Ritual Set",
+    ],
+    pricing: { W1: 2190, BW: 3690, MO: 6490 },
+  },
+  PVP: {
+    id: "PVP",
+    name: "Pure Vitality Protocol",
+    focus: "Energy & Vitality",
+    products: [
+      "Adrenal Cocktail + Trace Minerals",
+      "Energy Booster Adaptogen Drink",
+      "Adaptogenic Protein Bar",
+      "Whole Lemon Shots",
+      "Bone Broth with Adaptogens",
+      "Moringa Dust",
+    ],
+    pricing: { W1: 1690, BW: 2890, MO: 5190 },
+  },
+};
+
+interface Plan {
+  id: PlanId;
+  name: string;
+  frequency: string;
+  commitment: string;
+  pausable: boolean;
+}
+
+const PLANS: Plan[] = [
+  { id: "W1", name: "1-Week Trial", frequency: "Once-off", commitment: "None", pausable: false },
+  { id: "BW", name: "Bi-Weekly", frequency: "Every 2 weeks", commitment: "1 month (2 orders)", pausable: true },
+  { id: "MO", name: "Monthly", frequency: "Every month", commitment: "3 months", pausable: true },
+];
+
+interface AddOn {
+  id: string;
+  name: string;
+  price: number;
+  image: string | null;
+  slug: string | null;
+  category: string;
+}
+
+const ADD_ONS: AddOn[] = [
+  { id: "A1", name: "Sun-Dried Tomato Hummus", price: 590, image: "/images/sun-dried-tomato-hummus.jpeg", slug: "sun-dried-tomato-hummus", category: "Spreads" },
+  { id: "A2", name: "GF Crackers", price: 280, image: null, slug: null, category: "Snacks" },
+  { id: "A3", name: "Moringa Dust", price: 380, image: "/images/moringa-dust.jpg", slug: "moringa-dust", category: "Podi" },
+  { id: "A4", name: "Toxic-Free Skin Ritual Set", price: 1490, image: null, slug: null, category: "Wellness" },
+  { id: "A5", name: "Orange Peel Jam", price: 320, image: "/images/orange-peel-jam.jpg", slug: "orange-peel-jam", category: "Jams" },
+  { id: "A6", name: "Organic Basil Pesto", price: 540, image: "/images/organic-basil-pesto.jpg", slug: "organic-basil-pesto", category: "Spreads" },
+  { id: "A7", name: "Aloe Vera Elixir", price: 420, image: null, slug: null, category: "Tonics" },
+  { id: "A8", name: "GF Banana Bread", price: 520, image: "/images/gluten-free-banana-bread.jpg", slug: "gluten-free-banana-bread", category: "Bakes" },
+];
+
+const BONE_BROTH_VARIANTS: Record<string, string> = {
+  vegan: "Vegan Mushroom + Adaptogen Broth",
+  vegetarian: "Vegan or Dairy-based Broth",
+  omnivore: "Collagen-rich Non-Veg Broth",
+  flexitarian: "Choice per delivery",
+};
+
+// Image map for bundle products — null means placeholder
+const PRODUCT_IMAGES: Record<string, string | null> = {
+  "Whole Lemon Shots": null,
+  "Liver Cleanser Tonic": null,
+  "Bone Broth (choice)": null,
+  "Adaptogenic Protein Bar": "/images/adaptogenic-protein-bars.jpg",
+  "Adrenal Cocktail + Trace Minerals": null,
+  "Cascara Constipation Relief Drink": null,
+  "Energy Booster Adaptogen Drink": null,
+  "Bone Broth with Herbs": null,
+  "Bone Broth (Collagen-rich)": null,
+  "Moringa Dust": "/images/moringa-dust.jpg",
+  "Adrenal Cocktail": null,
+  "Toxic-Free Skin Ritual Set": null,
+  "Bone Broth with Adaptogens": null,
+};
+
+// ─── Routing logic ───────────────────────────────────────────────────────────
+
+function routeBundle(q1: string[]): BundleId {
+  if (q1.includes("hormones")) return "HHB";
+  if (q1.includes("gut") && q1.includes("energy")) return "GRV";
+  if (q1.includes("skin")) return "GFW";
+  if (q1.length === 1 && q1[0] === "energy") return "PVP";
+  // liver alone, immunity alone, or anything else
+  return "GRV";
+}
+
+function recommendedPlan(q6: string): PlanId {
+  if (q6 === "correct") return "MO";
+  if (q6 === "elevate") return "BW";
+  return "BW"; // maintain → Bi-Weekly or 1-Week Trial, default BW
+}
+
+// ─── Formatting ──────────────────────────────────────────────────────────────
+
+function formatINR(amount: number): string {
+  return "₹" + amount.toLocaleString("en-IN");
+}
+
+// ─── Persistence helpers ─────────────────────────────────────────────────────
+
+const STORAGE_KEY = "dilisshious-quiz-result";
+
+interface QuizResultData {
+  answers: Record<string, string | string[]>;
+  recommendedBundle: BundleId;
+}
+
+function saveToLocalStorage(data: QuizResultData) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch {}
+}
+
+async function saveToDatabase(data: QuizResultData) {
+  try {
+    await fetch("/api/quiz-result", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+  } catch {}
+}
+
+// ─── Component ───────────────────────────────────────────────────────────────
+
+interface RootCauseQuizProps {
+  onComplete?: () => void;
+  onSkip?: () => void;
+}
+
+export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps) {
+  const { data: session } = useSession();
+  const { addToCartSilent } = useCart();
+  const { openAuthModal } = useAuth();
+  const router = useRouter();
+  const [step, setStep] = useState(0); // 0..5 = questions, 6 = result
+  const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
+  const [selectedPlan, setSelectedPlan] = useState<PlanId | null>(null);
+  const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
+
+  const currentQuestion = QUESTIONS[step];
+  const totalQuestions = QUESTIONS.length;
+  const isResult = step === totalQuestions;
+
+  // Derive result
+  const bundleId = routeBundle((answers.q1 as string[]) || []);
+  const bundle = BUNDLES[bundleId];
+
+  // Set recommended plan when reaching results
+  useEffect(() => {
+    if (isResult && !selectedPlan) {
+      setSelectedPlan(recommendedPlan(answers.q6 as string));
+    }
+  }, [isResult, selectedPlan, answers.q6]);
+
+  // Save result on completion
+  useEffect(() => {
+    if (!isResult) return;
+    const data: QuizResultData = { answers, recommendedBundle: bundleId };
+    if (session?.user) {
+      saveToDatabase(data);
+    } else {
+      saveToLocalStorage(data);
+    }
+    // Mark quiz as seen so first-visit redirect doesn't fire again
+    try {
+      localStorage.setItem("dilisshious-quiz-seen", "1");
+    } catch {}
+  }, [isResult, answers, bundleId, session]);
+
+  const handleSelect = useCallback(
+    (optionId: string) => {
+      const q = currentQuestion;
+      if (q.type === "single") {
+        const newAnswers = { ...answers, [q.id]: optionId };
+        setAnswers(newAnswers);
+        // Auto-advance after short delay for single-select
+        setTimeout(() => setStep((s) => s + 1), 300);
+      } else {
+        // multi-select
+        const current = (answers[q.id] as string[]) || [];
+        const updated = current.includes(optionId)
+          ? current.filter((id) => id !== optionId)
+          : [...current, optionId];
+        setAnswers({ ...answers, [q.id]: updated });
+      }
+    },
+    [answers, currentQuestion]
+  );
+
+  const canAdvance =
+    !isResult &&
+    currentQuestion &&
+    (currentQuestion.type === "single"
+      ? typeof answers[currentQuestion.id] === "string"
+      : ((answers[currentQuestion.id] as string[]) || []).length > 0);
+
+  const handleNext = () => {
+    if (canAdvance) setStep((s) => s + 1);
+  };
+
+  const handleBack = () => {
+    if (step > 0) setStep((s) => s - 1);
+  };
+
+  const toggleAddOn = (id: string) => {
+    setSelectedAddOns((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  // Price calculation
+  const bundlePrice = selectedPlan ? bundle.pricing[selectedPlan] : 0;
+  const addOnTotal = ADD_ONS.filter((a) => selectedAddOns.has(a.id)).reduce((sum, a) => sum + a.price, 0);
+  const orderTotal = bundlePrice + addOnTotal;
+
+  // Bone broth variant
+  const dietPref = (answers.q4 as string) || "omnivore";
+  const brothVariant = BONE_BROTH_VARIANTS[dietPref] || BONE_BROTH_VARIANTS.omnivore;
+
+  // Add-on carousel scroll
+  const addOnScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollState = useCallback(() => {
+    const el = addOnScrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 2);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 2);
+  }, []);
+
+  const scrollAddOns = useCallback((dir: "left" | "right") => {
+    const el = addOnScrollRef.current;
+    if (!el) return;
+    const cardWidth = el.firstElementChild?.getBoundingClientRect().width || 160;
+    el.scrollBy({ left: dir === "left" ? -cardWidth * 2 : cardWidth * 2, behavior: "smooth" });
+  }, []);
+
+  // ─── Result screen ──────────────────────────────────────────────────────────
+
+  if (isResult) {
+    const recPlanId = recommendedPlan(answers.q6 as string);
+
+    return (
+      <div className="h-full bg-[#fdf8f3] flex flex-col">
+        {/* Header */}
+        <div className="flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#e8d5c0]/50">
+          <button
+            onClick={handleBack}
+            className="flex items-center gap-1.5 text-sm text-[#5a4635] hover:text-[#c8956c] transition-colors"
+          >
+            <ArrowLeft size={18} />
+            Back
+          </button>
+          <button
+            onClick={onSkip}
+            className="text-sm text-[#5a4635]/60 hover:text-[#5a4635] transition-colors"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+            {/* Bundle recommendation */}
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#c8956c]/10 text-[#c8956c] text-sm font-medium mb-4">
+                <Sparkles size={16} />
+                Your personalised protocol
+              </div>
+              <h1
+                className="text-3xl sm:text-4xl font-semibold text-[#2d2016] mb-2"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                {bundle.name}
+              </h1>
+              <p className="text-[#5a4635]/70">{bundle.focus}</p>
+            </div>
+
+            {/* Products in bundle */}
+            <div className="bg-white rounded-2xl border border-[#e8d5c0]/60 p-5 sm:p-6 mb-6">
+              <h3 className="text-sm font-semibold text-[#2d2016] uppercase tracking-wider mb-4">
+                What&apos;s included
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {bundle.products.map((product) => {
+                  const img = PRODUCT_IMAGES[product] ?? null;
+                  return (
+                    <div
+                      key={product}
+                      className="relative bg-[#faf5ef] rounded-xl overflow-hidden border border-[#e8d5c0]/40"
+                    >
+                      <div className="aspect-square relative">
+                        {img ? (
+                          <Image
+                            src={img}
+                            alt={product}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 640px) 40vw, 180px"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f5ebe0] to-[#e8d5c0]/40 p-3">
+                            <span className="text-[#c8956c]/60 text-xs font-medium text-center leading-tight">
+                              {product}
+                            </span>
+                          </div>
+                        )}
+                        {/* Included badge */}
+                        <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-[#c8956c] flex items-center justify-center shadow-sm">
+                          <Check size={10} className="text-white" />
+                        </div>
+                      </div>
+                      <div className="px-2.5 py-2">
+                        <p className="text-[11px] font-medium text-[#2d2016] leading-tight line-clamp-2">
+                          {product}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-4 pt-4 border-t border-[#e8d5c0]/40">
+                <p className="text-xs text-[#5a4635]/60">
+                  Bone broth variant: <span className="font-medium text-[#5a4635]">{brothVariant}</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Plan picker */}
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold text-[#2d2016] uppercase tracking-wider mb-4">
+                Choose your plan
+              </h3>
+              <div className="grid gap-3">
+                {PLANS.map((plan) => {
+                  const isSelected = selectedPlan === plan.id;
+                  const isRec = plan.id === recPlanId;
+                  return (
+                    <button
+                      key={plan.id}
+                      onClick={() => setSelectedPlan(plan.id)}
+                      className={`relative w-full text-left p-4 rounded-xl border-2 transition-all ${
+                        isSelected
+                          ? "border-[#c8956c] bg-[#c8956c]/5"
+                          : "border-[#e8d5c0]/60 bg-white hover:border-[#c8956c]/40"
+                      }`}
+                    >
+                      {isRec && (
+                        <span className="absolute -top-2.5 right-4 px-2 py-0.5 bg-[#c8956c] text-white text-[10px] font-bold uppercase tracking-wider rounded-full">
+                          Recommended
+                        </span>
+                      )}
+                      <div className="flex items-center justify-between pl-8">
+                        <div>
+                          <p className="font-semibold text-[#2d2016]">{plan.name}</p>
+                          <p className="text-xs text-[#5a4635]/60 mt-0.5">
+                            {plan.frequency} · {plan.commitment === "None" ? "No commitment" : `Min. ${plan.commitment}`}
+                            {plan.pausable ? " · Pausable" : ""}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-lg font-bold text-[#2d2016]">
+                            {formatINR(bundle.pricing[plan.id])}
+                          </p>
+                          <p className="text-[10px] text-[#5a4635]/50">per delivery</p>
+                        </div>
+                      </div>
+                      {/* Selection indicator */}
+                      <div
+                        className={`absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                          isSelected ? "border-[#c8956c] bg-[#c8956c]" : "border-[#d4c4b0]"
+                        }`}
+                      >
+                        {isSelected && <Check size={12} className="text-white" />}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Add-ons carousel */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-[#2d2016] uppercase tracking-wider">
+                  Optional add-ons
+                </h3>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => scrollAddOns("left")}
+                    disabled={!canScrollLeft}
+                    className="w-8 h-8 rounded-full border border-[#e8d5c0] flex items-center justify-center text-[#5a4635] hover:bg-[#f5ebe0] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    aria-label="Scroll left"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    onClick={() => scrollAddOns("right")}
+                    disabled={!canScrollRight}
+                    className="w-8 h-8 rounded-full border border-[#e8d5c0] flex items-center justify-center text-[#5a4635] hover:bg-[#f5ebe0] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    aria-label="Scroll right"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+              </div>
+
+              <div
+                ref={addOnScrollRef}
+                onScroll={updateScrollState}
+                className="flex gap-3 overflow-x-auto scroll-smooth pb-2 -mx-4 px-4 sm:-mx-6 sm:px-6"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+              >
+                {ADD_ONS.map((addon) => {
+                  const isSelected = selectedAddOns.has(addon.id);
+                  return (
+                    <div
+                      key={addon.id}
+                      className={`relative bg-white rounded-xl overflow-hidden border transition-all duration-300 flex flex-col flex-shrink-0 w-[140px] sm:w-[156px] ${
+                        isSelected
+                          ? "border-[#c8956c] shadow-md shadow-[#c8956c]/10"
+                          : "border-[#e8d5c0]/60 hover:border-[#c8956c]/40 shadow-sm"
+                      }`}
+                    >
+                      {/* Image */}
+                      <div className="relative aspect-[4/3] bg-[#faf5ef] overflow-hidden flex-shrink-0">
+                        {addon.image ? (
+                          <Image
+                            src={addon.image}
+                            alt={addon.name}
+                            fill
+                            className="object-cover"
+                            sizes="156px"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f5ebe0] to-[#e8d5c0]/50 p-2">
+                            <span className="text-[#c8956c]/50 text-[10px] font-medium text-center leading-tight">
+                              {addon.name}
+                            </span>
+                          </div>
+                        )}
+                        {isSelected && (
+                          <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-[#c8956c] flex items-center justify-center shadow-sm">
+                            <Check size={10} className="text-white" />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Info */}
+                      <div className="p-2.5 flex flex-col flex-grow">
+                        <p className="text-[9px] font-medium text-[#c8956c] uppercase tracking-wider mb-0.5">
+                          {addon.category}
+                        </p>
+                        <h4
+                          className="text-xs font-semibold text-[#2d2016] mb-1 leading-tight line-clamp-2"
+                          style={{ fontFamily: "var(--font-heading)" }}
+                        >
+                          {addon.name}
+                        </h4>
+                        <p className="text-sm font-bold text-[#2d2016] mb-2">
+                          {formatINR(addon.price)}
+                        </p>
+
+                        <button
+                          onClick={() => toggleAddOn(addon.id)}
+                          className={`mt-auto w-full py-1.5 text-[11px] font-medium rounded-lg flex items-center justify-center gap-1 active:scale-[0.97] transition-all duration-300 ${
+                            isSelected
+                              ? "bg-[#c8956c] text-white hover:bg-[#b07f5a]"
+                              : "bg-[#2d2016] text-white hover:bg-[#c8956c]"
+                          }`}
+                        >
+                          {isSelected ? (
+                            <>
+                              <Check size={12} />
+                              <span>Added</span>
+                            </>
+                          ) : (
+                            <>
+                              <Plus size={12} />
+                              <span>Add</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sticky footer with total */}
+        <div className="flex-shrink-0 bg-white/90 backdrop-blur-xl border-t border-[#e8d5c0]/50 px-4 sm:px-6 py-4">
+          <div className="max-w-2xl mx-auto flex items-center justify-between">
+            <div>
+              <p className="text-xs text-[#5a4635]/60">Order total</p>
+              <p className="text-2xl font-bold text-[#2d2016]">{formatINR(orderTotal)}</p>
+              <p className="text-[10px] text-[#5a4635]/50">Free shipping on all bundles</p>
+            </div>
+            <button
+              onClick={async () => {
+                if (!selectedPlan) return;
+
+                // Require auth — open sign-in modal if not logged in
+                if (!session?.user) {
+                  openAuthModal();
+                  return;
+                }
+
+                const plan = PLANS.find((p) => p.id === selectedPlan)!;
+                const selectedAddOnItems = ADD_ONS.filter((a) => selectedAddOns.has(a.id));
+
+                // Add bundle to cart silently (no drawer)
+                addToCartSilent({
+                  slug: `bundle-${bundle.id.toLowerCase()}`,
+                  name: `${bundle.name} — ${plan.name}`,
+                  image: bundle.products[0] ? (PRODUCT_IMAGES[bundle.products[0]] || "/images/moringa-dust.jpg") : "/images/moringa-dust.jpg",
+                  price: bundle.pricing[selectedPlan],
+                  volume: plan.frequency,
+                  quantity: 1,
+                });
+
+                // Add selected add-ons to cart silently
+                selectedAddOnItems.forEach((addon) => {
+                  addToCartSilent({
+                    slug: addon.slug || `addon-${addon.id.toLowerCase()}`,
+                    name: addon.name,
+                    image: addon.image || "/images/moringa-dust.jpg",
+                    price: addon.price,
+                    volume: "per delivery",
+                    quantity: 1,
+                  });
+                });
+
+                // Save subscription to DB
+                try {
+                  await fetch("/api/subscriptions", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      bundleId: bundle.id,
+                      bundleName: bundle.name,
+                      planId: selectedPlan,
+                      planName: plan.name,
+                      frequency: plan.frequency,
+                      bundlePrice: bundle.pricing[selectedPlan],
+                      addOns: selectedAddOnItems.map((a) => ({
+                        id: a.id,
+                        name: a.name,
+                        price: a.price,
+                      })),
+                      total: orderTotal,
+                    }),
+                  });
+                } catch {}
+
+                // Mark quiz seen and go to checkout
+                try { localStorage.setItem("dilisshious-quiz-seen", "1"); } catch {}
+                router.push("/checkout");
+              }}
+              disabled={!selectedPlan}
+              className="px-8 py-3 bg-[#2d2016] text-white text-sm font-semibold rounded-full hover:bg-[#5a4635] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {!session?.user ? "Sign in to continue" : "Continue"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Question screen ─────────────────────────────────────────────────────────
+
+  const isMulti = currentQuestion.type === "multi";
+  const currentAnswer = answers[currentQuestion.id];
+  const multiSelected = (currentAnswer as string[]) || [];
+
+  return (
+    <div className="h-full bg-[#fdf8f3] flex flex-col">
+      {/* Header */}
+      <div className="flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#e8d5c0]/50">
+        <button
+          onClick={step > 0 ? handleBack : onSkip}
+          className="flex items-center gap-1.5 text-sm text-[#5a4635] hover:text-[#c8956c] transition-colors"
+        >
+          <ArrowLeft size={18} />
+          {step > 0 ? "Back" : "Exit"}
+        </button>
+        <span className="text-xs font-medium text-[#5a4635]/60">
+          {step + 1} of {totalQuestions}
+        </span>
+        <button
+          onClick={onSkip}
+          className="text-sm text-[#5a4635]/60 hover:text-[#5a4635] transition-colors"
+        >
+          Skip
+        </button>
+      </div>
+
+      {/* Progress bar */}
+      <div className="flex-shrink-0 h-1 bg-[#e8d5c0]/30">
+        <div
+          className="h-full bg-[#c8956c] transition-all duration-500 ease-out"
+          style={{ width: `${((step + 1) / totalQuestions) * 100}%` }}
+        />
+      </div>
+
+      {/* Question content */}
+      <div className="flex-1 overflow-y-auto min-h-0 flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
+        <div className="w-full max-w-lg">
+          <h2
+            className="text-2xl sm:text-3xl font-semibold text-[#2d2016] text-center mb-2"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            {currentQuestion.title}
+          </h2>
+          <p className="text-sm text-[#5a4635]/60 text-center mb-8">
+            {currentQuestion.subtitle}
+          </p>
+
+          {/* Option tiles */}
+          <div className="grid gap-3">
+            {currentQuestion.options.map((option) => {
+              const isSelected = isMulti
+                ? multiSelected.includes(option.id)
+                : currentAnswer === option.id;
+
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => handleSelect(option.id)}
+                  className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                    isSelected
+                      ? "border-[#c8956c] bg-[#c8956c]/5 shadow-sm"
+                      : "border-[#e8d5c0]/60 bg-white hover:border-[#c8956c]/40 hover:shadow-sm"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div
+                      className={`mt-0.5 w-5 h-5 flex items-center justify-center flex-shrink-0 transition-colors ${
+                        isMulti ? "rounded" : "rounded-full"
+                      } ${
+                        isSelected
+                          ? "bg-[#c8956c] border-2 border-[#c8956c]"
+                          : "border-2 border-[#d4c4b0]"
+                      }`}
+                    >
+                      {isSelected && <Check size={12} className="text-white" />}
+                    </div>
+                    <div>
+                      <p className="font-medium text-[#2d2016]">{option.label}</p>
+                      <p className="text-xs text-[#5a4635]/60 mt-0.5">{option.description}</p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Next button for multi-select questions */}
+          {isMulti && (
+            <button
+              onClick={handleNext}
+              disabled={!canAdvance}
+              className="mt-6 w-full py-3.5 bg-[#2d2016] text-white text-sm font-semibold rounded-full hover:bg-[#5a4635] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Continue
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

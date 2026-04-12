@@ -26,6 +26,7 @@ interface CartState {
 
 type CartAction =
   | { type: "ADD_TO_CART"; payload: CartItem }
+  | { type: "ADD_TO_CART_SILENT"; payload: CartItem }
   | { type: "REMOVE_FROM_CART"; payload: { slug: string; volume: string } }
   | {
       type: "UPDATE_QUANTITY";
@@ -57,6 +58,25 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         ...state,
         items: [...state.items, action.payload],
         isOpen: true,
+      };
+    }
+    case "ADD_TO_CART_SILENT": {
+      const existingIdx = state.items.findIndex(
+        (item) =>
+          item.slug === action.payload.slug &&
+          item.volume === action.payload.volume,
+      );
+      if (existingIdx > -1) {
+        const newItems = [...state.items];
+        newItems[existingIdx] = {
+          ...newItems[existingIdx],
+          quantity: newItems[existingIdx].quantity + action.payload.quantity,
+        };
+        return { ...state, items: newItems };
+      }
+      return {
+        ...state,
+        items: [...state.items, action.payload],
       };
     }
     case "REMOVE_FROM_CART":
@@ -114,6 +134,7 @@ interface CartContextType {
   items: CartItem[];
   isOpen: boolean;
   addToCart: (item: CartItem) => void;
+  addToCartSilent: (item: CartItem) => void;
   removeFromCart: (slug: string, volume: string) => void;
   updateQuantity: (slug: string, volume: string, quantity: number) => void;
   clearCart: () => void;
@@ -165,6 +186,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     (item: CartItem) => dispatch({ type: "ADD_TO_CART", payload: item }),
     [],
   );
+  const addToCartSilent = useCallback(
+    (item: CartItem) => dispatch({ type: "ADD_TO_CART_SILENT", payload: item }),
+    [],
+  );
   const removeFromCart = useCallback(
     (slug: string, volume: string) =>
       dispatch({ type: "REMOVE_FROM_CART", payload: { slug, volume } }),
@@ -195,6 +220,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         items: state.items,
         isOpen: state.isOpen,
         addToCart,
+        addToCartSilent,
         removeFromCart,
         updateQuantity,
         clearCart,

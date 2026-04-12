@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Menu, X, LogOut, User, Package } from "lucide-react";
+import { ShoppingBag, Menu, X, LogOut, User, Package, Sparkles, RefreshCw } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useSession, signOut } from "next-auth/react";
 import { useAuth } from "@/lib/auth-context";
@@ -69,6 +69,13 @@ export default function Navbar() {
             >
               Testimonials
             </Link>
+            <Link
+              href="/quiz"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2d2016] text-white text-sm font-medium rounded-full hover:bg-[#5a4635] transition-colors"
+            >
+              <Sparkles size={14} />
+              Find my protocol
+            </Link>
           </div>
 
           {/* Cart + Profile + Mobile Menu */}
@@ -130,6 +137,14 @@ export default function Navbar() {
                     >
                       <Package size={16} className="text-[#c8956c]" />
                       My Orders
+                    </Link>
+                    <Link
+                      href="/subscriptions"
+                      onClick={() => setProfileOpen(false)}
+                      className="w-full flex items-center gap-2 px-4 py-3 text-sm text-[#2d2016] hover:bg-[#fdf8f3] transition-colors border-b border-[#f0e6d8]"
+                    >
+                      <RefreshCw size={16} className="text-[#c8956c]" />
+                      My Subscriptions
                     </Link>
                     <button
                       onClick={() => {
@@ -198,6 +213,14 @@ export default function Navbar() {
                 className="text-sm font-medium text-[#5a4635] hover:text-[#c8956c] transition-colors"
               >
                 Testimonials
+              </Link>
+              <Link
+                href="/quiz"
+                onClick={() => setMobileOpen(false)}
+                className="inline-flex items-center gap-1.5 w-fit px-4 py-2 bg-[#2d2016] text-white text-sm font-medium rounded-full hover:bg-[#5a4635] transition-colors"
+              >
+                <Sparkles size={14} />
+                Find my protocol
               </Link>
               {status === "authenticated" && session?.user && (
                 <button
