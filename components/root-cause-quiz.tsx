@@ -250,10 +250,23 @@ function formatINR(amount: number): string {
 // ─── Persistence helpers ─────────────────────────────────────────────────────
 
 const STORAGE_KEY = "dilisshious-quiz-result";
+const PENDING_CHECKOUT_KEY = "dilisshious-quiz-pending-checkout";
 
 interface QuizResultData {
   answers: Record<string, string | string[]>;
   recommendedBundle: BundleId;
+}
+
+interface PendingCheckout {
+  bundleId: BundleId;
+  bundleName: string;
+  planId: PlanId;
+  planName: string;
+  frequency: string;
+  bundlePrice: number;
+  bundleImage: string;
+  addOns: { id: string; slug: string | null; name: string; price: number; image: string | null }[];
+  orderTotal: number;
 }
 
 function saveToLocalStorage(data: QuizResultData) {
@@ -371,6 +384,64 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
   // Bone broth variant
   const dietPref = (answers.q4 as string) || "omnivore";
   const brothVariant = BONE_BROTH_VARIANTS[dietPref] || BONE_BROTH_VARIANTS.omnivore;
+
+  // Resume pending checkout after sign-in
+  useEffect(() => {
+    if (!session?.user) return;
+    let raw: string | null = null;
+    try { raw = localStorage.getItem(PENDING_CHECKOUT_KEY); } catch {}
+    if (!raw) return;
+
+    let pending: PendingCheckout;
+    try { pending = JSON.parse(raw); } catch { return; }
+
+    // Clear immediately to prevent re-triggering
+    try { localStorage.removeItem(PENDING_CHECKOUT_KEY); } catch {}
+
+    // Add bundle to cart silently
+    addToCartSilent({
+      slug: `bundle-${pending.bundleId.toLowerCase()}`,
+      name: `${pending.bundleName} — ${pending.planName}`,
+      image: pending.bundleImage,
+      price: pending.bundlePrice,
+      volume: pending.frequency,
+      quantity: 1,
+    });
+
+    // Add add-ons to cart silently
+    pending.addOns.forEach((addon) => {
+      addToCartSilent({
+        slug: addon.slug || `addon-${addon.id.toLowerCase()}`,
+        name: addon.name,
+        image: addon.image || "/images/moringa-dust.jpg",
+        price: addon.price,
+        volume: "per delivery",
+        quantity: 1,
+      });
+    });
+
+    // Save subscription to DB and go to checkout
+    (async () => {
+      try {
+        await fetch("/api/subscriptions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bundleId: pending.bundleId,
+            bundleName: pending.bundleName,
+            planId: pending.planId,
+            planName: pending.planName,
+            frequency: pending.frequency,
+            bundlePrice: pending.bundlePrice,
+            addOns: pending.addOns.map((a) => ({ id: a.id, name: a.name, price: a.price })),
+            total: pending.orderTotal,
+          }),
+        });
+      } catch {}
+      try { localStorage.setItem("dilisshious-quiz-seen", "1"); } catch {}
+      router.push("/checkout");
+    })();
+  }, [session, addToCartSilent, router]);
 
   // Add-on carousel scroll
   const addOnScrollRef = useRef<HTMLDivElement>(null);
@@ -658,8 +729,26 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
               onClick={async () => {
                 if (!selectedPlan) return;
 
-                // Require auth — open sign-in modal if not logged in
+                // Require auth — save pending checkout and open sign-in modal
                 if (!session?.user) {
+                  const plan = PLANS.find((p) => p.id === selectedPlan)!;
+                  const pendingData: PendingCheckout = {
+                    bundleId: bundle.id,
+                    bundleName: bundle.name,
+                    planId: selectedPlan,
+                    planName: plan.name,
+                    frequency: plan.frequency,
+                    bundlePrice: bundle.pricing[selectedPlan],
+                    bundleImage: bundle.products[0] ? (PRODUCT_IMAGES[bundle.products[0]] || "/images/moringa-dust.jpg") : "/images/moringa-dust.jpg",
+                    addOns: ADD_ONS.filter((a) => selectedAddOns.has(a.id)).map((a) => ({
+                      id: a.id, slug: a.slug, name: a.name, price: a.price, image: a.image,
+                    })),
+                    orderTotal,
+                  };
+                  try {
+                    localStorage.setItem(PENDING_CHECKOUT_KEY, JSON.stringify(pendingData));
+                    localStorage.setItem("dilisshious-quiz-seen", "1");
+                  } catch {}
                   openAuthModal();
                   return;
                 }
