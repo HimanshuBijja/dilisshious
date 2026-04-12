@@ -74,7 +74,7 @@ export default function Navbar() {
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2d2016] text-white text-sm font-medium rounded-full hover:bg-[#5a4635] transition-colors"
             >
               <Sparkles size={14} />
-              Find my protocol
+              Know your Body
             </Link>
           </div>
 
@@ -220,7 +220,7 @@ export default function Navbar() {
                 className="inline-flex items-center gap-1.5 w-fit px-4 py-2 bg-[#2d2016] text-white text-sm font-medium rounded-full hover:bg-[#5a4635] transition-colors"
               >
                 <Sparkles size={14} />
-                Find my protocol
+                Know your body
               </Link>
               {status === "authenticated" && session?.user && (
                 <button
