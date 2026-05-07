@@ -52,7 +52,7 @@ export default function AboutSection() {
           <div className="relative">
             <div className="aspect-[4/5] rounded-3xl overflow-hidden bg-[#e8d5c0] shadow-2xl shadow-[#2d2016]/10">
               <Image
-                src="/images/cookie-01.png"
+                src="/images/gourmet-brown-butter-cookies.jpg"
                 alt="About Dilisshious"
                 fill
                 className="object-cover"
