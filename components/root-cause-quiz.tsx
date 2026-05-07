@@ -896,7 +896,7 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
       </div>
 
       {/* Question content */}
-      <div className="relative z-10 flex-1 overflow-y-auto min-h-0 flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
+      <div className="relative z-10 flex-1 overflow-y-auto min-h-0 flex flex-col items-center px-4 sm:px-6 py-8 sm:py-12">
         <div key={animKey} className="w-full max-w-lg">
           <div className="text-center mb-10 animate-fade-in-up">
             <span className="inline-block text-xs font-semibold text-[#c8956c] uppercase tracking-[0.25em] mb-4">
