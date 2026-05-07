@@ -108,59 +108,59 @@ interface Bundle {
 }
 
 const BUNDLES: Record<BundleId, Bundle> = {
-  GRV: {
-    id: "GRV",
-    name: "Gut Reset & Vitality",
-    focus: "Gut Health + Energy",
-    products: [
-      "Whole Lemon Shots",
-      "Liver Cleanser Tonic",
-      "Bone Broth (choice)",
-      "Adaptogenic Protein Bar",
-      "Adrenal Cocktail + Trace Minerals",
-      "Cascara Constipation Relief Drink",
-    ],
-    pricing: { W1: 1890, BW: 3290, MO: 5990 },
-  },
   HHB: {
     id: "HHB",
-    name: "Hormonal Harmony",
+    name: "Hormone Health Bundle",
     focus: "Hormonal Balance",
     products: [
-      "Adrenal Cocktail + Trace Minerals",
-      "Adaptogenic Protein Bar",
-      "Liver Cleanser Tonic",
-      "Whole Lemon Shots",
-      "Energy Booster Adaptogen Drink",
-      "Bone Broth with Herbs",
+      "Estrogen Detox Shots",
+      "Orange Peel Adaptogenic Jam",
+      "Herb Blend (Raw)",
+      "Adaptogenic Hormonal Tea",
+      "Royal Saffron-Cacao Snack Bites",
+      "Adaptogenic Bone Broth (v/nv)",
     ],
     pricing: { W1: 1790, BW: 3090, MO: 5590 },
   },
+  GRV: {
+    id: "GRV",
+    name: "Gut Health Bundle",
+    focus: "Gut Health",
+    products: [
+      "Happy Belly Shots",
+      "Crunchy Yoghurt Bowl (Seasonal Fruit)",
+      "Probiotic Rich Snack Bars",
+      "Adaptogenic Bone Broth (v/nv)",
+      "Bloat-Free Spray",
+      "Relax-Me (Digestive Blend)",
+    ],
+    pricing: { W1: 1890, BW: 3290, MO: 5990 },
+  },
   GFW: {
     id: "GFW",
-    name: "Glow From Within",
-    focus: "Skin & Hair",
+    name: "Skin & Hair Bundle",
+    focus: "Skin & Hair Health",
     products: [
-      "Whole Lemon Shots",
-      "Liver Cleanser Tonic",
-      "Bone Broth (Collagen-rich)",
-      "Moringa Dust",
-      "Adrenal Cocktail",
-      "Toxic-Free Skin Ritual Set",
+      "Vitamin C Shots",
+      "Adaptogenic Hair Growth Oil",
+      "Saffron Kumkumadi Face Oil",
+      "Salmon Bone Broth",
+      "Collagen Gummies",
+      "Seed Crackers",
     ],
     pricing: { W1: 2190, BW: 3690, MO: 6490 },
   },
   PVP: {
     id: "PVP",
-    name: "Pure Vitality Protocol",
+    name: "Energy Bundle",
     focus: "Energy & Vitality",
     products: [
-      "Adrenal Cocktail + Trace Minerals",
-      "Energy Booster Adaptogen Drink",
-      "Adaptogenic Protein Bar",
-      "Whole Lemon Shots",
-      "Bone Broth with Adaptogens",
-      "Moringa Dust",
+      "Adrenal Cocktail Blend with Trace Minerals",
+      "Divine Energy Bars",
+      "Diva Energy Drink",
+      "Buckwheat Berry Granola",
+      "Magic Mushroom Blend",
+      "Mineral Rich Bone Broth",
     ],
     pricing: { W1: 1690, BW: 2890, MO: 5190 },
   },
@@ -189,16 +189,7 @@ interface AddOn {
   category: string;
 }
 
-const ADD_ONS: AddOn[] = [
-  { id: "A1", name: "Sun-Dried Tomato Hummus", price: 590, image: "/images/sun-dried-tomato-hummus.jpeg", slug: "sun-dried-tomato-hummus", category: "Spreads" },
-  { id: "A2", name: "GF Crackers", price: 280, image: null, slug: null, category: "Snacks" },
-  { id: "A3", name: "Moringa Dust", price: 380, image: "/images/moringa-dust.jpg", slug: "moringa-dust", category: "Podi" },
-  { id: "A4", name: "Toxic-Free Skin Ritual Set", price: 1490, image: null, slug: null, category: "Wellness" },
-  { id: "A5", name: "Orange Peel Jam", price: 320, image: "/images/orange-peel-jam.jpg", slug: "orange-peel-jam", category: "Jams" },
-  { id: "A6", name: "Organic Basil Pesto", price: 540, image: "/images/organic-basil-pesto.jpg", slug: "organic-basil-pesto", category: "Spreads" },
-  { id: "A7", name: "Aloe Vera Elixir", price: 420, image: null, slug: null, category: "Tonics" },
-  { id: "A8", name: "GF Banana Bread", price: 520, image: "/images/gluten-free-banana-bread.jpg", slug: "gluten-free-banana-bread", category: "Bakes" },
-];
+const ADD_ONS: AddOn[] = [];
 
 const BONE_BROTH_VARIANTS: Record<string, string> = {
   vegan: "Vegan Mushroom + Adaptogen Broth",
@@ -207,31 +198,39 @@ const BONE_BROTH_VARIANTS: Record<string, string> = {
   flexitarian: "Choice per delivery",
 };
 
-// Image map for bundle products — null means placeholder
 const PRODUCT_IMAGES: Record<string, string | null> = {
-  "Whole Lemon Shots": null,
-  "Liver Cleanser Tonic": null,
-  "Bone Broth (choice)": null,
-  "Adaptogenic Protein Bar": "/images/adaptogenic-protein-bars.jpg",
-  "Adrenal Cocktail + Trace Minerals": null,
-  "Cascara Constipation Relief Drink": null,
-  "Energy Booster Adaptogen Drink": null,
-  "Bone Broth with Herbs": null,
-  "Bone Broth (Collagen-rich)": null,
-  "Moringa Dust": "/images/moringa-dust.jpg",
-  "Adrenal Cocktail": null,
-  "Toxic-Free Skin Ritual Set": null,
-  "Bone Broth with Adaptogens": null,
+  "Estrogen Detox Shots": null,
+  "Orange Peel Adaptogenic Jam": null,
+  "Herb Blend (Raw)": null,
+  "Adaptogenic Hormonal Tea": null,
+  "Royal Saffron-Cacao Snack Bites": null,
+  "Adaptogenic Bone Broth (v/nv)": null,
+  "Happy Belly Shots": null,
+  "Crunchy Yoghurt Bowl (Seasonal Fruit)": null,
+  "Probiotic Rich Snack Bars": null,
+  "Bloat-Free Spray": null,
+  "Relax-Me (Digestive Blend)": null,
+  "Vitamin C Shots": null,
+  "Adaptogenic Hair Growth Oil": null,
+  "Saffron Kumkumadi Face Oil": null,
+  "Salmon Bone Broth": null,
+  "Collagen Gummies": null,
+  "Seed Crackers": null,
+  "Adrenal Cocktail Blend with Trace Minerals": null,
+  "Divine Energy Bars": null,
+  "Diva Energy Drink": null,
+  "Buckwheat Berry Granola": null,
+  "Magic Mushroom Blend": null,
+  "Mineral Rich Bone Broth": null,
 };
 
 // ─── Routing logic ───────────────────────────────────────────────────────────
 
 function routeBundle(q1: string[]): BundleId {
   if (q1.includes("hormones")) return "HHB";
-  if (q1.includes("gut") && q1.includes("energy")) return "GRV";
   if (q1.includes("skin")) return "GFW";
-  if (q1.length === 1 && q1[0] === "energy") return "PVP";
-  // liver alone, immunity alone, or anything else
+  if (q1.includes("energy") && !q1.includes("gut")) return "PVP";
+  // gut, liver, immunity, mixed, or anything else
   return "GRV";
 }
 
@@ -565,11 +564,13 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                   );
                 })}
               </div>
-              <div className="mt-5 pt-4 border-t border-[#f0e6d8]">
-                <p className="text-xs text-[#5a4635]/60">
-                  Bone broth variant: <span className="font-medium text-[#5a4635]">{brothVariant}</span>
-                </p>
-              </div>
+              {bundle.id !== "GFW" && (
+                <div className="mt-5 pt-4 border-t border-[#f0e6d8]">
+                  <p className="text-xs text-[#5a4635]/60">
+                    Bone broth variant: <span className="font-medium text-[#5a4635]">{brothVariant}</span>
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Plan picker */}
@@ -629,7 +630,7 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
             </div>
 
             {/* Add-ons carousel */}
-            <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+            {ADD_ONS.length > 0 && <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-xs font-semibold text-[#c8956c] uppercase tracking-[0.2em]">
                   Optional Add-ons
@@ -735,7 +736,7 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                   );
                 })}
               </div>
-            </div>
+            </div>}
           </div>
         </div>
 
