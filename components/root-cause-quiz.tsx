@@ -301,6 +301,7 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
   const [selectedPlan, setSelectedPlan] = useState<PlanId | null>(null);
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
+  const [animKey, setAnimKey] = useState(0); // triggers re-animation on step change
 
   const currentQuestion = QUESTIONS[step];
   const totalQuestions = QUESTIONS.length;
@@ -339,7 +340,10 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
         const newAnswers = { ...answers, [q.id]: optionId };
         setAnswers(newAnswers);
         // Auto-advance after short delay for single-select
-        setTimeout(() => setStep((s) => s + 1), 300);
+        setTimeout(() => {
+          setAnimKey((k) => k + 1);
+          setStep((s) => s + 1);
+        }, 300);
       } else {
         // multi-select
         const current = (answers[q.id] as string[]) || [];
@@ -360,11 +364,17 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
       : ((answers[currentQuestion.id] as string[]) || []).length > 0);
 
   const handleNext = () => {
-    if (canAdvance) setStep((s) => s + 1);
+    if (canAdvance) {
+      setAnimKey((k) => k + 1);
+      setStep((s) => s + 1);
+    }
   };
 
   const handleBack = () => {
-    if (step > 0) setStep((s) => s - 1);
+    if (step > 0) {
+      setAnimKey((k) => k + 1);
+      setStep((s) => s - 1);
+    }
   };
 
   const toggleAddOn = (id: string) => {
@@ -468,9 +478,13 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
     const recPlanId = recommendedPlan(answers.q6 as string);
 
     return (
-      <div className="h-full bg-[#fdf8f3] flex flex-col">
+      <div className="h-full bg-[#fdf8f3] flex flex-col relative overflow-hidden grain-overlay">
+        {/* Atmospheric background accents */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#c8956c]/[0.04] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#c8956c]/[0.03] rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+
         {/* Header */}
-        <div className="flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#e8d5c0]/50">
+        <div className="relative z-10 flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#e8d5c0]/40 bg-[#fdf8f3]/80 backdrop-blur-sm">
           <button
             onClick={handleBack}
             className="flex items-center gap-1.5 text-sm text-[#5a4635] hover:text-[#c8956c] transition-colors"
@@ -480,33 +494,38 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
           </button>
           <button
             onClick={onSkip}
-            className="text-sm text-[#5a4635]/60 hover:text-[#5a4635] transition-colors"
+            className="w-8 h-8 rounded-full border border-[#e8d5c0] flex items-center justify-center text-[#5a4635]/60 hover:text-[#5a4635] hover:border-[#c8956c]/40 transition-all"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto min-h-0">
+        <div className="relative z-10 flex-1 overflow-y-auto min-h-0">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
             {/* Bundle recommendation */}
-            <div className="text-center mb-10">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#c8956c]/10 text-[#c8956c] text-sm font-medium mb-4">
-                <Sparkles size={16} />
-                Your personalised protocol
-              </div>
+            <div className="text-center mb-12 animate-fade-in-up">
+              <span className="inline-block text-xs font-semibold text-[#c8956c] uppercase tracking-[0.25em] mb-4">
+                Your Personalised Protocol
+              </span>
               <h1
-                className="text-3xl sm:text-4xl font-semibold text-[#2d2016] mb-2"
+                className="text-4xl sm:text-5xl font-semibold text-[#2d2016] mb-3"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
                 {bundle.name}
               </h1>
-              <p className="text-[#5a4635]/70">{bundle.focus}</p>
+              {/* Decorative flourish */}
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <span className="h-px w-12 bg-[#c8956c]/40" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#c8956c]" />
+                <span className="h-px w-12 bg-[#c8956c]/40" />
+              </div>
+              <p className="text-[#5a4635]/70 text-sm sm:text-base">{bundle.focus}</p>
             </div>
 
             {/* Products in bundle */}
-            <div className="bg-white rounded-2xl border border-[#e8d5c0]/60 p-5 sm:p-6 mb-6">
-              <h3 className="text-sm font-semibold text-[#2d2016] uppercase tracking-wider mb-4">
-                What&apos;s included
+            <div className="bg-white rounded-2xl border border-[#f0e6d8] p-5 sm:p-6 mb-8 shadow-sm animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+              <h3 className="text-xs font-semibold text-[#c8956c] uppercase tracking-[0.2em] mb-5">
+                What&apos;s Included
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {bundle.products.map((product) => {
@@ -514,30 +533,30 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                   return (
                     <div
                       key={product}
-                      className="relative bg-[#faf5ef] rounded-xl overflow-hidden border border-[#e8d5c0]/40"
+                      className="relative bg-[#fdf8f3] rounded-xl overflow-hidden border border-[#f0e6d8] hover:border-[#c8956c]/30 hover:shadow-md hover:shadow-[#c8956c]/5 transition-all duration-300 group"
                     >
-                      <div className="aspect-square relative">
+                      <div className="aspect-square relative overflow-hidden">
                         {img ? (
                           <Image
                             src={img}
                             alt={product}
                             fill
-                            className="object-cover"
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
                             sizes="(max-width: 640px) 40vw, 180px"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f5ebe0] to-[#e8d5c0]/40 p-3">
-                            <span className="text-[#c8956c]/60 text-xs font-medium text-center leading-tight">
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f5ebe0] to-[#e8d5c0]/30 p-3">
+                            <span className="text-[#c8956c]/50 text-xs font-medium text-center leading-tight">
                               {product}
                             </span>
                           </div>
                         )}
                         {/* Included badge */}
-                        <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-[#c8956c] flex items-center justify-center shadow-sm">
+                        <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#c8956c] flex items-center justify-center shadow-sm">
                           <Check size={10} className="text-white" />
                         </div>
                       </div>
-                      <div className="px-2.5 py-2">
+                      <div className="px-2.5 py-2.5">
                         <p className="text-[11px] font-medium text-[#2d2016] leading-tight line-clamp-2">
                           {product}
                         </p>
@@ -546,7 +565,7 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                   );
                 })}
               </div>
-              <div className="mt-4 pt-4 border-t border-[#e8d5c0]/40">
+              <div className="mt-5 pt-4 border-t border-[#f0e6d8]">
                 <p className="text-xs text-[#5a4635]/60">
                   Bone broth variant: <span className="font-medium text-[#5a4635]">{brothVariant}</span>
                 </p>
@@ -554,9 +573,9 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
             </div>
 
             {/* Plan picker */}
-            <div className="mb-6">
-              <h3 className="text-sm font-semibold text-[#2d2016] uppercase tracking-wider mb-4">
-                Choose your plan
+            <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+              <h3 className="text-xs font-semibold text-[#c8956c] uppercase tracking-[0.2em] mb-5">
+                Choose Your Plan
               </h3>
               <div className="grid gap-3">
                 {PLANS.map((plan) => {
@@ -566,36 +585,39 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                     <button
                       key={plan.id}
                       onClick={() => setSelectedPlan(plan.id)}
-                      className={`relative w-full text-left p-4 rounded-xl border-2 transition-all ${
+                      className={`relative w-full text-left p-4 sm:p-5 rounded-2xl border transition-all duration-300 ${
                         isSelected
-                          ? "border-[#c8956c] bg-[#c8956c]/5"
-                          : "border-[#e8d5c0]/60 bg-white hover:border-[#c8956c]/40"
+                          ? "border-[#c8956c] bg-[#c8956c]/[0.04] shadow-md shadow-[#c8956c]/10"
+                          : "border-[#f0e6d8] bg-white hover:border-[#c8956c]/30 hover:shadow-sm"
                       }`}
                     >
                       {isRec && (
-                        <span className="absolute -top-2.5 right-4 px-2 py-0.5 bg-[#c8956c] text-white text-[10px] font-bold uppercase tracking-wider rounded-full">
+                        <span className="absolute -top-2.5 right-4 px-3 py-0.5 bg-[#c8956c] text-white text-[10px] font-bold uppercase tracking-wider rounded-full shadow-sm">
                           Recommended
                         </span>
                       )}
-                      <div className="flex items-center justify-between pl-8">
+                      <div className="flex items-center justify-between pl-9">
                         <div>
-                          <p className="font-semibold text-[#2d2016]">{plan.name}</p>
-                          <p className="text-xs text-[#5a4635]/60 mt-0.5">
+                          <p className="font-semibold text-[#2d2016] text-[15px]">{plan.name}</p>
+                          <p className="text-xs text-[#5a4635]/60 mt-1">
                             {plan.frequency} · {plan.commitment === "None" ? "No commitment" : `Min. ${plan.commitment}`}
                             {plan.pausable ? " · Pausable" : ""}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-lg font-bold text-[#2d2016]">
+                          <p
+                            className="text-xl font-semibold text-[#2d2016]"
+                            style={{ fontFamily: "var(--font-heading)" }}
+                          >
                             {formatINR(bundle.pricing[plan.id])}
                           </p>
-                          <p className="text-[10px] text-[#5a4635]/50">per delivery</p>
+                          <p className="text-[10px] text-[#5a4635]/50 mt-0.5">per delivery</p>
                         </div>
                       </div>
                       {/* Selection indicator */}
                       <div
-                        className={`absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                          isSelected ? "border-[#c8956c] bg-[#c8956c]" : "border-[#d4c4b0]"
+                        className={`absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                          isSelected ? "border-[#c8956c] bg-[#c8956c] scale-110" : "border-[#d4c4b0]"
                         }`}
                       >
                         {isSelected && <Check size={12} className="text-white" />}
@@ -607,16 +629,16 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
             </div>
 
             {/* Add-ons carousel */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-semibold text-[#2d2016] uppercase tracking-wider">
-                  Optional add-ons
+            <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-xs font-semibold text-[#c8956c] uppercase tracking-[0.2em]">
+                  Optional Add-ons
                 </h3>
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => scrollAddOns("left")}
                     disabled={!canScrollLeft}
-                    className="w-8 h-8 rounded-full border border-[#e8d5c0] flex items-center justify-center text-[#5a4635] hover:bg-[#f5ebe0] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    className="w-8 h-8 rounded-full border border-[#e8d5c0] flex items-center justify-center text-[#5a4635] hover:bg-[#f5ebe0] hover:border-[#c8956c]/30 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                     aria-label="Scroll left"
                   >
                     <ChevronLeft size={16} />
@@ -624,7 +646,7 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                   <button
                     onClick={() => scrollAddOns("right")}
                     disabled={!canScrollRight}
-                    className="w-8 h-8 rounded-full border border-[#e8d5c0] flex items-center justify-center text-[#5a4635] hover:bg-[#f5ebe0] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    className="w-8 h-8 rounded-full border border-[#e8d5c0] flex items-center justify-center text-[#5a4635] hover:bg-[#f5ebe0] hover:border-[#c8956c]/30 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                     aria-label="Scroll right"
                   >
                     <ChevronRight size={16} />
@@ -643,10 +665,10 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                   return (
                     <div
                       key={addon.id}
-                      className={`relative bg-white rounded-xl overflow-hidden border transition-all duration-300 flex flex-col flex-shrink-0 w-[140px] sm:w-[156px] ${
+                      className={`relative bg-white rounded-2xl overflow-hidden border transition-all duration-300 flex flex-col flex-shrink-0 w-[140px] sm:w-[156px] group ${
                         isSelected
-                          ? "border-[#c8956c] shadow-md shadow-[#c8956c]/10"
-                          : "border-[#e8d5c0]/60 hover:border-[#c8956c]/40 shadow-sm"
+                          ? "border-[#c8956c] shadow-lg shadow-[#c8956c]/10"
+                          : "border-[#f0e6d8] hover:border-[#c8956c]/30 hover:shadow-md hover:shadow-[#c8956c]/5"
                       }`}
                     >
                       {/* Image */}
@@ -656,11 +678,11 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                             src={addon.image}
                             alt={addon.name}
                             fill
-                            className="object-cover"
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
                             sizes="156px"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f5ebe0] to-[#e8d5c0]/50 p-2">
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f5ebe0] to-[#e8d5c0]/30 p-2">
                             <span className="text-[#c8956c]/50 text-[10px] font-medium text-center leading-tight">
                               {addon.name}
                             </span>
@@ -675,7 +697,7 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
 
                       {/* Info */}
                       <div className="p-2.5 flex flex-col flex-grow">
-                        <p className="text-[9px] font-medium text-[#c8956c] uppercase tracking-wider mb-0.5">
+                        <p className="text-[9px] font-semibold text-[#c8956c] uppercase tracking-[0.15em] mb-0.5">
                           {addon.category}
                         </p>
                         <h4
@@ -718,11 +740,16 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
         </div>
 
         {/* Sticky footer with total */}
-        <div className="flex-shrink-0 bg-white/90 backdrop-blur-xl border-t border-[#e8d5c0]/50 px-4 sm:px-6 py-4">
+        <div className="relative z-10 flex-shrink-0 bg-white/90 backdrop-blur-xl border-t border-[#f0e6d8] px-4 sm:px-6 py-4 shadow-[0_-4px_20px_rgba(45,32,22,0.04)]">
           <div className="max-w-2xl mx-auto flex items-center justify-between">
             <div>
               <p className="text-xs text-[#5a4635]/60">Order total</p>
-              <p className="text-2xl font-bold text-[#2d2016]">{formatINR(orderTotal)}</p>
+              <p
+                className="text-2xl font-semibold text-[#2d2016]"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                {formatINR(orderTotal)}
+              </p>
               <p className="text-[10px] text-[#5a4635]/50">Free shipping on all bundles</p>
             </div>
             <button
@@ -805,7 +832,7 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                 router.push("/checkout");
               }}
               disabled={!selectedPlan}
-              className="px-8 py-3 bg-[#2d2016] text-white text-sm font-semibold rounded-full hover:bg-[#5a4635] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-8 py-3.5 bg-[#2d2016] text-white text-sm font-semibold rounded-full hover:bg-[#5a4635] active:scale-[0.97] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-[#2d2016]/20"
             >
               {!session?.user ? "Sign in to continue" : "Continue"}
             </button>
@@ -822,9 +849,13 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
   const multiSelected = (currentAnswer as string[]) || [];
 
   return (
-    <div className="h-full bg-[#fdf8f3] flex flex-col">
+    <div className="h-full bg-[#fdf8f3] flex flex-col relative overflow-hidden grain-overlay">
+      {/* Atmospheric background accents */}
+      <div className="absolute top-1/4 -right-32 w-[400px] h-[400px] bg-[#c8956c]/[0.04] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-32 w-[350px] h-[350px] bg-[#c8956c]/[0.03] rounded-full blur-3xl pointer-events-none" />
+
       {/* Header */}
-      <div className="flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#e8d5c0]/50">
+      <div className="relative z-10 flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#e8d5c0]/40 bg-[#fdf8f3]/80 backdrop-blur-sm">
         <button
           onClick={step > 0 ? handleBack : onSkip}
           className="flex items-center gap-1.5 text-sm text-[#5a4635] hover:text-[#c8956c] transition-colors"
@@ -832,41 +863,64 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
           <ArrowLeft size={18} />
           {step > 0 ? "Back" : "Exit"}
         </button>
-        <span className="text-xs font-medium text-[#5a4635]/60">
-          {step + 1} of {totalQuestions}
-        </span>
+        {/* Step dots */}
+        <div className="flex items-center gap-2">
+          {Array.from({ length: totalQuestions }).map((_, i) => (
+            <div
+              key={i}
+              className={`rounded-full transition-all duration-500 ${
+                i === step
+                  ? "w-6 h-2 bg-[#c8956c]"
+                  : i < step
+                  ? "w-2 h-2 bg-[#c8956c]/60"
+                  : "w-2 h-2 bg-[#e8d5c0]"
+              }`}
+            />
+          ))}
+        </div>
         <button
           onClick={onSkip}
-          className="text-sm text-[#5a4635]/60 hover:text-[#5a4635] transition-colors"
+          className="text-sm text-[#5a4635]/60 hover:text-[#c8956c] transition-colors font-medium"
         >
           Skip
         </button>
       </div>
 
       {/* Progress bar */}
-      <div className="flex-shrink-0 h-1 bg-[#e8d5c0]/30">
+      <div className="relative z-10 flex-shrink-0 h-0.5 bg-[#e8d5c0]/20">
         <div
-          className="h-full bg-[#c8956c] transition-all duration-500 ease-out"
+          className="h-full bg-gradient-to-r from-[#c8956c] to-[#d4a57a] transition-all duration-700 ease-out"
           style={{ width: `${((step + 1) / totalQuestions) * 100}%` }}
         />
       </div>
 
       {/* Question content */}
-      <div className="flex-1 overflow-y-auto min-h-0 flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
-        <div className="w-full max-w-lg">
-          <h2
-            className="text-2xl sm:text-3xl font-semibold text-[#2d2016] text-center mb-2"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            {currentQuestion.title}
-          </h2>
-          <p className="text-sm text-[#5a4635]/60 text-center mb-8">
-            {currentQuestion.subtitle}
-          </p>
+      <div className="relative z-10 flex-1 overflow-y-auto min-h-0 flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
+        <div key={animKey} className="w-full max-w-lg">
+          <div className="text-center mb-10 animate-fade-in-up">
+            <span className="inline-block text-xs font-semibold text-[#c8956c] uppercase tracking-[0.25em] mb-4">
+              Question {step + 1} of {totalQuestions}
+            </span>
+            <h2
+              className="text-3xl sm:text-4xl font-semibold text-[#2d2016] mb-3"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              {currentQuestion.title}
+            </h2>
+            {/* Decorative flourish */}
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <span className="h-px w-10 bg-[#c8956c]/40" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#c8956c]" />
+              <span className="h-px w-10 bg-[#c8956c]/40" />
+            </div>
+            <p className="text-sm text-[#5a4635]/60">
+              {currentQuestion.subtitle}
+            </p>
+          </div>
 
           {/* Option tiles */}
           <div className="grid gap-3">
-            {currentQuestion.options.map((option) => {
+            {currentQuestion.options.map((option, idx) => {
               const isSelected = isMulti
                 ? multiSelected.includes(option.id)
                 : currentAnswer === option.id;
@@ -875,27 +929,28 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                 <button
                   key={option.id}
                   onClick={() => handleSelect(option.id)}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                  className={`animate-fade-in-up w-full text-left p-4 sm:p-5 rounded-2xl border transition-all duration-300 group ${
                     isSelected
-                      ? "border-[#c8956c] bg-[#c8956c]/5 shadow-sm"
-                      : "border-[#e8d5c0]/60 bg-white hover:border-[#c8956c]/40 hover:shadow-sm"
+                      ? "border-[#c8956c] bg-[#c8956c]/[0.04] shadow-md shadow-[#c8956c]/10"
+                      : "border-[#f0e6d8] bg-white hover:border-[#c8956c]/30 hover:shadow-md hover:shadow-[#c8956c]/5"
                   }`}
+                  style={{ animationDelay: `${0.1 + idx * 0.06}s` }}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-3.5">
                     <div
-                      className={`mt-0.5 w-5 h-5 flex items-center justify-center flex-shrink-0 transition-colors ${
-                        isMulti ? "rounded" : "rounded-full"
+                      className={`mt-0.5 w-5 h-5 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
+                        isMulti ? "rounded-md" : "rounded-full"
                       } ${
                         isSelected
-                          ? "bg-[#c8956c] border-2 border-[#c8956c]"
-                          : "border-2 border-[#d4c4b0]"
+                          ? "bg-[#c8956c] border-2 border-[#c8956c] scale-110"
+                          : "border-2 border-[#d4c4b0] group-hover:border-[#c8956c]/50"
                       }`}
                     >
                       {isSelected && <Check size={12} className="text-white" />}
                     </div>
                     <div>
-                      <p className="font-medium text-[#2d2016]">{option.label}</p>
-                      <p className="text-xs text-[#5a4635]/60 mt-0.5">{option.description}</p>
+                      <p className="font-semibold text-[#2d2016] text-[15px]">{option.label}</p>
+                      <p className="text-xs text-[#5a4635]/60 mt-0.5 leading-relaxed">{option.description}</p>
                     </div>
                   </div>
                 </button>
@@ -908,7 +963,8 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
             <button
               onClick={handleNext}
               disabled={!canAdvance}
-              className="mt-6 w-full py-3.5 bg-[#2d2016] text-white text-sm font-semibold rounded-full hover:bg-[#5a4635] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="mt-8 w-full py-3.5 bg-[#2d2016] text-white text-sm font-semibold rounded-full hover:bg-[#5a4635] active:scale-[0.97] transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-[#2d2016]/20 animate-fade-in-up"
+              style={{ animationDelay: "0.4s" }}
             >
               Continue
             </button>
