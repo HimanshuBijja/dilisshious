@@ -7,6 +7,7 @@ import { useCart } from "@/lib/cart-context";
 import { useAuth } from "@/lib/auth-context";
 import Image from "next/image";
 import { ArrowLeft, Check, Plus, Sparkles, X, ChevronLeft, ChevronRight } from "lucide-react";
+import QuizProductCarousel from "@/components/quiz-product-carousel";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -628,6 +629,9 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                 })}
               </div>
             </div>
+
+            {/* Products carousel */}
+            {/* <QuizProductCarousel /> */}
 
             {/* Add-ons carousel */}
             {ADD_ONS.length > 0 && <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
