@@ -1,5 +1,5 @@
-import ProductCard from "@/components/product-card";
 import { getProducts } from "@/lib/products";
+import ProductsFilter from "@/components/sections/products-filter";
 
 export default async function ProductsSection() {
   const products = await getProducts();
@@ -17,7 +17,6 @@ export default async function ProductsSection() {
           >
             Made with Love
           </h2>
-          {/* Decorative line */}
           <div className="flex items-center justify-center gap-3 mb-5">
             <span className="h-px w-12 bg-[#c8956c]/40" />
             <span className="w-1.5 h-1.5 rounded-full bg-[#c8956c]" />
@@ -29,11 +28,7 @@ export default async function ProductsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-          {products.map((product) => (
-            <ProductCard key={product.slug} product={product} />
-          ))}
-        </div>
+        <ProductsFilter products={products} />
       </div>
     </section>
   );

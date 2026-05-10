@@ -512,7 +512,7 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
             {/* Social Links */}
             <div className="flex justify-center gap-3 mt-8 pt-6 border-t border-gray-200">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/dilisshious.health"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full border-2 border-[#c8956c]/30 flex items-center justify-center text-[#c8956c] hover:bg-[#c8956c] hover:text-white hover:border-[#c8956c] transition-all duration-300"

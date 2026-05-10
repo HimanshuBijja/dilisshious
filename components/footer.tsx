@@ -30,7 +30,7 @@ export default function Footer() {
         {/* Social Media Links */}
         <div className="flex justify-center gap-3 sm:gap-4 pb-12">
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/dilisshious.health"
             target="_blank"
             rel="noopener noreferrer"
             className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#c8956c] hover:border-[#c8956c] transition-all duration-300"

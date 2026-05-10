@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useCart } from "@/lib/cart-context";
 import { useAuth } from "@/lib/auth-context";
 import Image from "next/image";
-import { ArrowLeft, Check, Plus, Sparkles, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Check, Plus, Sparkles, X, ChevronLeft, ChevronRight, Leaf, Zap } from "lucide-react";
 import QuizProductCarousel from "@/components/quiz-product-carousel";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -225,6 +225,202 @@ const PRODUCT_IMAGES: Record<string, string | null> = {
   "Mineral Rich Bone Broth": null,
 };
 
+interface BundleProductDetail {
+  name: string;
+  tagline: string;
+  description: string;
+  benefits: string[];
+  ingredients: string;
+  howToUse: string;
+}
+
+const PRODUCT_DETAILS: Record<string, BundleProductDetail> = {
+  "Estrogen Detox Shots": {
+    name: "Estrogen Detox Shots",
+    tagline: "Flush, rebalance, reclaim.",
+    description: "A potent daily shot crafted with DIM-rich cruciferous extracts, flaxseed lignans, and liver-support herbs. Designed to support healthy estrogen metabolism and clear excess hormones gently but effectively.",
+    benefits: ["Supports estrogen detoxification", "Reduces hormonal bloating", "Promotes liver health", "Balances mood cycles"],
+    ingredients: "Broccoli sprout extract, flaxseed, dandelion root, milk thistle, ginger, lemon, turmeric, black pepper.",
+    howToUse: "Take one shot daily on an empty stomach. Best taken in the morning for optimal liver support.",
+  },
+  "Orange Peel Adaptogenic Jam": {
+    name: "Orange Peel Adaptogenic Jam",
+    tagline: "Sweetness with a purpose.",
+    description: "Sun-dried orange peels slow-cooked with adaptogenic herbs and raw honey. This jam does more than taste good — it calms your nervous system, supports progesterone balance, and brings gentle warmth to every spoon.",
+    benefits: ["Calms cortisol spikes", "Supports progesterone", "Rich in bioflavonoids", "Anti-inflammatory"],
+    ingredients: "Sun-dried orange peel, ashwagandha, shatavari, raw honey, cardamom, cinnamon.",
+    howToUse: "Spread on sourdough, stir into yoghurt, or enjoy by the spoon. One tablespoon daily.",
+  },
+  "Herb Blend (Raw)": {
+    name: "Herb Blend (Raw)",
+    tagline: "Ancient wisdom, daily ritual.",
+    description: "A cold-processed blend of Ayurvedic herbs revered for hormonal harmony. Each herb is sourced from certified organic farms and minimally processed to preserve its phytochemical integrity.",
+    benefits: ["Hormone-balancing adaptogenics", "Supports cycle regularity", "Reduces PMS symptoms", "Nourishes the endocrine system"],
+    ingredients: "Shatavari, ashwagandha, lodhra, aloe vera powder, licorice root, brahmi.",
+    howToUse: "Mix ½ tsp into warm water, milk, or smoothie. Best taken twice daily.",
+  },
+  "Adaptogenic Hormonal Tea": {
+    name: "Adaptogenic Hormonal Tea",
+    tagline: "Steep. Sip. Settle.",
+    description: "A warming blend of herbs that speak directly to your endocrine system. Sip your way to steadier moods, clearer skin, and a cycle that flows rather than fights.",
+    benefits: ["Reduces PMS and cramping", "Eases mood swings", "Supports thyroid function", "Calms adrenal fatigue"],
+    ingredients: "Red raspberry leaf, chaste tree berry, spearmint, rose petals, licorice root, ashwagandha.",
+    howToUse: "Brew one teaspoon in 200ml hot water for 5–7 minutes. Drink 1–2 cups daily.",
+  },
+  "Royal Saffron-Cacao Snack Bites": {
+    name: "Royal Saffron-Cacao Snack Bites",
+    tagline: "Indulge. Nourish. Glow.",
+    description: "Dark cacao kissed with real saffron threads and mood-lifting adaptogens. These bites are your afternoon ritual — deeply satisfying, gently uplifting, and formulated to support serotonin and hormonal balance.",
+    benefits: ["Elevates mood naturally", "Rich in magnesium", "Supports serotonin production", "Hormone-friendly sweetness"],
+    ingredients: "Raw cacao, dates, saffron, maca, coconut oil, cardamom, Himalayan salt.",
+    howToUse: "Enjoy 2–3 bites as a snack. Perfect mid-afternoon when energy dips.",
+  },
+  "Adaptogenic Bone Broth (v/nv)": {
+    name: "Adaptogenic Bone Broth",
+    tagline: "Nourishment at its most primal.",
+    description: "Slow-simmered broth infused with adaptogenic herbs. Available in vegan mushroom and non-veg collagen-rich variants. Supports gut lining, hormone synthesis, and deep cellular nourishment.",
+    benefits: ["Heals gut lining", "Provides collagen precursors", "Supports adrenal health", "Rich in minerals"],
+    ingredients: "Vegan: Shiitake, maitake, reishi, astragalus, kombu. Non-veg: Pasture-raised bones, same adaptogens.",
+    howToUse: "Warm and sip as a morning tonic or use as a base for soups and stews.",
+  },
+  "Happy Belly Shots": {
+    name: "Happy Belly Shots",
+    tagline: "Start your gut's day right.",
+    description: "A probiotic-rich daily shot featuring live cultures, digestive bitters, and soothing herbs. Designed to kickstart digestion, reduce bloating, and rebalance your gut microbiome from the inside out.",
+    benefits: ["Reduces bloating", "Boosts good bacteria", "Improves nutrient absorption", "Eases IBS symptoms"],
+    ingredients: "Apple cider vinegar, ginger, fennel, peppermint, lactobacillus cultures, raw honey.",
+    howToUse: "Shake well. Take one shot before your largest meal. Best enjoyed chilled.",
+  },
+  "Crunchy Yoghurt Bowl (Seasonal Fruit)": {
+    name: "Crunchy Yoghurt Bowl",
+    tagline: "Gut health never tasted this good.",
+    description: "Thick probiotic yoghurt layered with seasonal fruits, prebiotic granola, and seeds. A complete gut-health meal that nourishes your microbiome while satisfying your hunger and your tastebuds.",
+    benefits: ["High in probiotics", "Prebiotic fibre from granola", "Seasonal nutrients", "Supports diverse gut flora"],
+    ingredients: "Probiotic yoghurt, seasonal fruits, oat granola, flaxseeds, chia seeds, raw honey.",
+    howToUse: "Enjoy as breakfast or a light lunch. Best consumed fresh upon delivery.",
+  },
+  "Probiotic Rich Snack Bars": {
+    name: "Probiotic Rich Snack Bars",
+    tagline: "Snack smarter. Gut better.",
+    description: "Chewy, satisfying bars packed with prebiotic fibres and gut-loving seeds. These are your on-the-go gut support — no compromise, no refrigeration needed.",
+    benefits: ["Prebiotic and fibre-rich", "Supports regular digestion", "Slow-release energy", "Gut-microbiome diversity"],
+    ingredients: "Oats, psyllium husk, flaxseed, dates, inulin, coconut, vanilla.",
+    howToUse: "Have one bar between meals or as a snack. Pair with plenty of water.",
+  },
+  "Bloat-Free Spray": {
+    name: "Bloat-Free Spray",
+    tagline: "Bye, bloat. For good.",
+    description: "A targeted herbal digestive spray with carminative botanicals. Two sprays under the tongue after meals and your digestive system gets the signal to move — gently but effectively.",
+    benefits: ["Rapid bloat relief", "Supports bowel motility", "Reduces gas and discomfort", "Travel-friendly"],
+    ingredients: "Peppermint oil, fennel extract, ginger tincture, dandelion, artichoke leaf.",
+    howToUse: "Spray twice under the tongue after meals. Use up to 3 times daily.",
+  },
+  "Relax-Me (Digestive Blend)": {
+    name: "Relax-Me Digestive Blend",
+    tagline: "Calm your gut. Calm your mind.",
+    description: "A nervine-digestive blend that works on the gut-brain axis. Stress tightens digestion — this blend loosens it. Designed for the bloat that comes from anxiety, rushing, and overthinking.",
+    benefits: ["Calms nervous digestion", "Reduces stress-induced bloating", "Soothes the gut lining", "Supports sleep quality"],
+    ingredients: "Chamomile, valerian root, lemon balm, passionflower, triphala, fennel.",
+    howToUse: "Brew as a tea or dissolve powder in warm water. Best taken in the evening.",
+  },
+  "Vitamin C Shots": {
+    name: "Vitamin C Shots",
+    tagline: "Glow from within.",
+    description: "High-potency natural vitamin C from amla, kakadu plum, and rosehip — not synthetic ascorbic acid. This daily shot floods your system with antioxidants that visibly brighten skin and stimulate collagen production.",
+    benefits: ["Natural collagen synthesis", "Brightens skin tone", "Antioxidant protection", "Boosts immunity"],
+    ingredients: "Amla, kakadu plum, rosehip, turmeric, black pepper, lemon.",
+    howToUse: "Take one shot daily, ideally in the morning. Can be diluted with water.",
+  },
+  "Adaptogenic Hair Growth Oil": {
+    name: "Adaptogenic Hair Growth Oil",
+    tagline: "Feed your roots.",
+    description: "A cold-pressed oil blend with Ayurvedic herbs proven to stimulate the scalp, reduce DHT, and nourish follicles from root to tip. Used consistently, this oil transforms hair texture and density.",
+    benefits: ["Stimulates hair growth", "Reduces hair fall", "Nourishes scalp", "Adds natural shine"],
+    ingredients: "Bhringraj, brahmi, amla in sesame and coconut oil base, rosemary essential oil.",
+    howToUse: "Massage into scalp 2–3 times per week. Leave overnight or for at least 2 hours before washing.",
+  },
+  "Saffron Kumkumadi Face Oil": {
+    name: "Saffron Kumkumadi Face Oil",
+    tagline: "Ancient beauty. Visible results.",
+    description: "The legendary Kumkumadi formulation elevated with real saffron threads. This oil has been used in Ayurveda for centuries to even skin tone, reduce hyperpigmentation, and restore radiance.",
+    benefits: ["Reduces dark spots", "Evens skin tone", "Deep hydration", "Anti-aging antioxidants"],
+    ingredients: "Saffron, sandalwood, manjistha, turmeric, vetiver, sesame oil base.",
+    howToUse: "Apply 3–4 drops to face before bed. Gently press into skin. Use daily for best results.",
+  },
+  "Salmon Bone Broth": {
+    name: "Salmon Bone Broth",
+    tagline: "Deep sea nutrition, slow simmered.",
+    description: "Rich in omega-3s, marine collagen, and minerals from wild-caught salmon bones. Supports skin elasticity, hair strength, and joint health in a way no supplement can replicate.",
+    benefits: ["Marine collagen for skin", "Omega-3 fatty acids", "Joint and hair support", "Rich in iodine and zinc"],
+    ingredients: "Wild-caught salmon bones, kombu, ginger, apple cider vinegar, sea salt.",
+    howToUse: "Sip warm as a tonic or use as a base for soups and risottos.",
+  },
+  "Collagen Gummies": {
+    name: "Collagen Gummies",
+    tagline: "Beauty, in every bite.",
+    description: "Marine collagen peptides in a delicious gummy format — easy to take daily without any fuss. Formulated with vitamin C and biotin for maximum collagen synthesis and absorption.",
+    benefits: ["Boosts skin elasticity", "Strengthens nails and hair", "Easy daily collagen dose", "Enhanced with biotin"],
+    ingredients: "Marine collagen peptides, vitamin C, biotin, natural fruit flavour, agar (vegan gelling agent).",
+    howToUse: "Eat 2 gummies daily, preferably with a meal.",
+  },
+  "Seed Crackers": {
+    name: "Seed Crackers",
+    tagline: "Crunch with intention.",
+    description: "Thin, crispy crackers loaded with skin-nourishing seeds. High in zinc, selenium, and essential fatty acids that feed your skin from the inside. A snack that genuinely works for you.",
+    benefits: ["Zinc for skin healing", "Selenium for hair growth", "Omega-3 and 6 balance", "High in fibre"],
+    ingredients: "Pumpkin seeds, sunflower seeds, flaxseed, sesame, chia, Himalayan salt, olive oil.",
+    howToUse: "Enjoy with nut butter, hummus, or as a standalone snack. Pair with the Salmon Bone Broth.",
+  },
+  "Adrenal Cocktail Blend with Trace Minerals": {
+    name: "Adrenal Cocktail Blend",
+    tagline: "Replenish. Restore. Revive.",
+    description: "A precise mineral formula that restores adrenal function and combats fatigue at the cellular level. Electrolytes, vitamin C, and trace minerals work together to end the energy crash cycle.",
+    benefits: ["Restores adrenal health", "Combats energy crashes", "Rehydrates at cellular level", "Reduces afternoon fatigue"],
+    ingredients: "Cream of tartar, orange juice powder, Himalayan salt, magnesium, zinc, vitamin C.",
+    howToUse: "Mix one scoop in 300ml water. Drink mid-morning or at your biggest energy dip.",
+  },
+  "Divine Energy Bars": {
+    name: "Divine Energy Bars",
+    tagline: "Sustained energy. No crash.",
+    description: "Slow-burn energy bars made with complex carbs, healthy fats, and adaptogenic herbs. Unlike sugar-based bars, these give you 3–4 hours of clean, focused energy without the afternoon crash.",
+    benefits: ["Slow-release energy", "Adaptogenic herbs for focus", "No sugar crash", "Protein and fibre balanced"],
+    ingredients: "Oats, almond butter, maca, ashwagandha, dates, dark chocolate, chia seeds.",
+    howToUse: "Eat one bar 30 minutes before you need peak energy — work, workouts, or long days.",
+  },
+  "Diva Energy Drink": {
+    name: "Diva Energy Drink",
+    tagline: "Power without the jitter.",
+    description: "A naturally caffeinated adaptogenic drink that gives clean energy and mental clarity without the anxiety or crash of conventional energy drinks. Made for women who need to perform at their best.",
+    benefits: ["Clean caffeine from green tea", "Adaptogens for sustained focus", "No jitters or crash", "Electrolyte replenishment"],
+    ingredients: "Green tea extract, guarana, rhodiola, cordyceps, coconut water powder, B vitamins.",
+    howToUse: "Mix one sachet in 250ml cold water. Drink when you need a focused energy boost.",
+  },
+  "Buckwheat Berry Granola": {
+    name: "Buckwheat Berry Granola",
+    tagline: "Morning energy, unlocked.",
+    description: "Gluten-free buckwheat granola baked with antioxidant-rich berries and energy-supportive seeds. A powerhouse breakfast that sets your energy tone for the entire day.",
+    benefits: ["Slow-release complex carbs", "High in antioxidants", "Supports adrenal function", "Rich in magnesium and iron"],
+    ingredients: "Buckwheat, freeze-dried berries, pumpkin seeds, coconut flakes, raw honey, cinnamon.",
+    howToUse: "Have with nut milk or probiotic yoghurt for breakfast. Can also be eaten dry as a snack.",
+  },
+  "Magic Mushroom Blend": {
+    name: "Magic Mushroom Blend",
+    tagline: "Nature's most powerful nootropics.",
+    description: "A premium blend of lion's mane, cordyceps, and reishi — the trio known for brain power, sustained energy, and immune resilience. This blend works on your mitochondria, your focus, and your stamina simultaneously.",
+    benefits: ["Cognitive clarity and focus", "Mitochondrial energy support", "Immune system modulation", "Anti-fatigue adaptogen"],
+    ingredients: "Lion's mane, cordyceps militaris, reishi, chaga, turkey tail — all dual-extracted.",
+    howToUse: "Mix ½ tsp into coffee, matcha, or warm water. Best taken in the morning.",
+  },
+  "Mineral Rich Bone Broth": {
+    name: "Mineral Rich Bone Broth",
+    tagline: "The original energy drink.",
+    description: "Slow-simmered for 24 hours to extract every mineral, electrolyte, and amino acid from pasture-raised bones. This broth hydrates, replenishes, and fuels your body better than any synthetic supplement.",
+    benefits: ["Deep mineral replenishment", "Electrolyte balance", "Supports adrenal health", "Collagen and glycine rich"],
+    ingredients: "Pasture-raised bones, apple cider vinegar, ginger, bay leaf, black pepper, sea salt.",
+    howToUse: "Warm and sip as a morning or mid-day tonic. Season to taste.",
+  },
+};
+
 // ─── Routing logic ───────────────────────────────────────────────────────────
 
 function routeBundle(q1: string[]): BundleId {
@@ -302,6 +498,7 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
   const [selectedPlan, setSelectedPlan] = useState<PlanId | null>(null);
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
   const [animKey, setAnimKey] = useState(0); // triggers re-animation on step change
+  const [productPopup, setProductPopup] = useState<string | null>(null);
 
   const currentQuestion = QUESTIONS[step];
   const totalQuestions = QUESTIONS.length;
@@ -524,16 +721,20 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
 
             {/* Products in bundle */}
             <div className="bg-white rounded-2xl border border-[#f0e6d8] p-5 sm:p-6 mb-8 shadow-sm animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-              <h3 className="text-xs font-semibold text-[#c8956c] uppercase tracking-[0.2em] mb-5">
-                What&apos;s Included
-              </h3>
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-xs font-semibold text-[#c8956c] uppercase tracking-[0.2em]">
+                  What&apos;s Included
+                </h3>
+                <span className="text-[10px] text-[#5a4635]/50">Tap any product for details</span>
+              </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {bundle.products.map((product) => {
                   const img = PRODUCT_IMAGES[product] ?? null;
                   return (
-                    <div
+                    <button
                       key={product}
-                      className="relative bg-[#fdf8f3] rounded-xl overflow-hidden border border-[#f0e6d8] hover:border-[#c8956c]/30 hover:shadow-md hover:shadow-[#c8956c]/5 transition-all duration-300 group"
+                      onClick={() => setProductPopup(product)}
+                      className="relative bg-[#fdf8f3] rounded-xl overflow-hidden border border-[#f0e6d8] hover:border-[#c8956c]/40 hover:shadow-md hover:shadow-[#c8956c]/5 transition-all duration-300 group text-left cursor-pointer active:scale-[0.97]"
                     >
                       <div className="aspect-square relative overflow-hidden">
                         {img ? (
@@ -555,13 +756,17 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                         <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#c8956c] flex items-center justify-center shadow-sm">
                           <Check size={10} className="text-white" />
                         </div>
+                        {/* Hover overlay hint */}
+                        <div className="absolute inset-0 bg-[#2d2016]/0 group-hover:bg-[#2d2016]/10 transition-colors duration-300 flex items-end justify-center pb-2 opacity-0 group-hover:opacity-100">
+                          <span className="text-[9px] font-semibold text-white bg-[#2d2016]/70 px-2 py-0.5 rounded-full backdrop-blur-sm">View Details</span>
+                        </div>
                       </div>
                       <div className="px-2.5 py-2.5">
                         <p className="text-[11px] font-medium text-[#2d2016] leading-tight line-clamp-2">
                           {product}
                         </p>
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -573,6 +778,163 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
                 </div>
               )}
             </div>
+
+            {/* ── Product Detail Drawer ── */}
+            {productPopup && (() => {
+              const detail = PRODUCT_DETAILS[productPopup];
+              if (!detail) return null;
+              return (
+                <div
+                  className="fixed inset-0 z-50 flex items-end sm:items-end justify-center"
+                  onClick={() => setProductPopup(null)}
+                >
+                  {/* Layered backdrop */}
+                  <div className="absolute inset-0 bg-[#1a0f08]/60 backdrop-blur-md" />
+
+                  {/* Drawer panel */}
+                  <div
+                    className="relative z-10 w-full sm:max-w-lg max-h-[92vh] flex flex-col"
+                    style={{ animation: "drawerSlideUp 0.38s cubic-bezier(0.32, 0.72, 0, 1) both" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {/* ── Drag pill ── */}
+                    <div className="flex justify-center pt-3 pb-1">
+                      <div className="w-10 h-1 rounded-full bg-white/20" />
+                    </div>
+
+                    {/* ── Rich hero header — dark brand bg ── */}
+                    <div className="relative bg-[#2d2016] px-6 pt-4 pb-8 overflow-hidden rounded-t-3xl">
+                      {/* Decorative orb */}
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-[#c8956c]/[0.08] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+                      <div className="absolute bottom-0 left-0 w-40 h-40 bg-[#c8956c]/[0.05] rounded-full blur-2xl translate-y-1/2 pointer-events-none" />
+
+                      {/* Close button */}
+                      <button
+                        onClick={() => setProductPopup(null)}
+                        className="absolute top-4 right-5 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white/80 hover:border-white/30 transition-all"
+                      >
+                        <X size={14} />
+                      </button>
+
+                      {/* Eyebrow */}
+                      <div className="flex items-center gap-2.5 mb-5">
+                        <span className="w-4 h-px bg-[#c8956c]" />
+                        <span className="text-[10px] font-semibold text-[#c8956c] uppercase tracking-[0.3em]">
+                          In your bundle
+                        </span>
+                      </div>
+
+                      {/* Product name */}
+                      <h3
+                        className="text-[22px] sm:text-2xl font-semibold text-[#fdf8f3] leading-snug mb-2 relative z-10"
+                        style={{ fontFamily: "var(--font-heading)" }}
+                      >
+                        {detail.name}
+                      </h3>
+
+                      {/* Tagline as italic quote */}
+                      <p
+                        className="text-sm text-[#c8956c]/80 italic relative z-10"
+                        style={{ fontFamily: "var(--font-heading)" }}
+                      >
+                        &ldquo;{detail.tagline}&rdquo;
+                      </p>
+
+                      {/* Gold rule */}
+                      <div className="mt-6 flex items-center gap-3">
+                        <span className="h-px flex-1 bg-white/8" />
+                        <span className="w-1 h-1 rounded-full bg-[#c8956c]/50" />
+                        <span className="h-px flex-1 bg-white/8" />
+                      </div>
+                    </div>
+
+                    {/* ── Cream scrollable body ── */}
+                    <div
+                      className="flex-1 overflow-y-auto bg-[#fdf8f3] min-h-0"
+                      style={{ scrollbarWidth: "none" }}
+                    >
+                      <div className="px-6 py-6 space-y-6">
+
+                        {/* Description */}
+                        <p className="text-sm text-[#5a4635]/80 leading-[1.8]">
+                          {detail.description}
+                        </p>
+
+                        {/* ── Benefits ── */}
+                        <div>
+                          <div className="flex items-center gap-2 mb-4">
+                            <span className="text-[#c8956c] text-[11px]">◆</span>
+                            <h4 className="text-[10px] font-bold text-[#2d2016] uppercase tracking-[0.28em]">
+                              What it does
+                            </h4>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            {detail.benefits.map((b, i) => (
+                              <div
+                                key={b}
+                                className="group flex items-start gap-2.5 bg-white rounded-xl border border-[#f0e6d8] p-3 hover:border-[#c8956c]/30 hover:shadow-sm transition-all duration-200"
+                                style={{ animationDelay: `${i * 0.05}s` }}
+                              >
+                                <div className="w-4 h-4 rounded-full bg-[#c8956c]/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[#c8956c]/20 transition-colors">
+                                  <Check size={9} className="text-[#c8956c]" />
+                                </div>
+                                <p className="text-[11px] text-[#5a4635] leading-snug font-medium">{b}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* ── Ingredients ── */}
+                        <div className="rounded-2xl border border-[#e8d5c0] overflow-hidden">
+                          <div className="flex items-center gap-2.5 bg-[#f5ebe0] px-4 py-3 border-b border-[#e8d5c0]">
+                            <Leaf size={13} className="text-[#c8956c]" />
+                            <h4 className="text-[10px] font-bold text-[#2d2016] uppercase tracking-[0.28em]">
+                              Ingredients
+                            </h4>
+                          </div>
+                          <div className="px-4 py-3.5 bg-white">
+                            <p className="text-xs text-[#5a4635]/75 leading-[1.85]">{detail.ingredients}</p>
+                          </div>
+                        </div>
+
+                        {/* ── How to use ── */}
+                        <div className="rounded-2xl border border-[#c8956c]/25 overflow-hidden">
+                          <div className="flex items-center gap-2.5 bg-[#2d2016] px-4 py-3">
+                            <Zap size={13} className="text-[#c8956c]" />
+                            <h4 className="text-[10px] font-bold text-[#fdf8f3]/80 uppercase tracking-[0.28em]">
+                              How to use
+                            </h4>
+                          </div>
+                          <div className="px-4 py-3.5 bg-[#fdf8f3]">
+                            <p className="text-xs text-[#5a4635] leading-[1.85]">{detail.howToUse}</p>
+                          </div>
+                        </div>
+
+                        {/* Bottom breathing room */}
+                        <div className="h-2" />
+                      </div>
+                    </div>
+
+                    {/* ── Sticky footer ── */}
+                    <div className="flex-shrink-0 bg-white border-t border-[#f0e6d8] px-6 py-4">
+                      <button
+                        onClick={() => setProductPopup(null)}
+                        className="w-full py-3.5 bg-[#2d2016] text-[#fdf8f3] text-sm font-semibold rounded-full hover:bg-[#5a4635] active:scale-[0.98] transition-all duration-300 tracking-wide"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+
+                  <style>{`
+                    @keyframes drawerSlideUp {
+                      from { transform: translateY(100%); opacity: 0.6; }
+                      to   { transform: translateY(0);    opacity: 1; }
+                    }
+                  `}</style>
+                </div>
+              );
+            })()}
 
             {/* Plan picker */}
             <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
