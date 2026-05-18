@@ -785,151 +785,184 @@ export default function RootCauseQuiz({ onComplete, onSkip }: RootCauseQuizProps
               if (!detail) return null;
               return (
                 <div
-                  className="fixed inset-0 z-50 flex items-end sm:items-end justify-center"
+                  className="fixed inset-0 z-50 flex items-end lg:items-center justify-center"
                   onClick={() => setProductPopup(null)}
                 >
                   {/* Layered backdrop */}
-                  <div className="absolute inset-0 bg-[#1a0f08]/60 backdrop-blur-md" />
+                  <div className="absolute inset-0 bg-[#1a0f08]/65 backdrop-blur-md" />
 
-                  {/* Drawer panel */}
+                  {/* Drawer panel
+                      Mobile  → full-width, 95 svh, slides up from bottom, rounded top
+                      Desktop → centred card, 80 vw × 80 vh, fully rounded, scale-fade in  */}
                   <div
-                    className="relative z-10 w-full sm:max-w-lg max-h-[92vh] flex flex-col"
-                    style={{ animation: "drawerSlideUp 0.38s cubic-bezier(0.32, 0.72, 0, 1) both" }}
+                    className="relative z-10 flex flex-col
+                      w-full h-[95svh] rounded-t-3xl
+                      lg:w-[80vw] lg:max-w-5xl lg:h-[80vh] lg:rounded-2xl lg:shadow-2xl lg:shadow-[#2d2016]/40"
+                    style={{ animation: "productDrawerIn 0.38s cubic-bezier(0.32, 0.72, 0, 1) both" }}
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {/* ── Drag pill ── */}
-                    <div className="flex justify-center pt-3 pb-1">
+                    {/* ── Drag pill — mobile only ── */}
+                    <div className="flex justify-center pt-3 pb-1 lg:hidden flex-shrink-0">
                       <div className="w-10 h-1 rounded-full bg-white/20" />
                     </div>
 
-                    {/* ── Rich hero header — dark brand bg ── */}
-                    <div className="relative bg-[#2d2016] px-6 pt-4 pb-8 overflow-hidden rounded-t-3xl">
-                      {/* Decorative orb */}
-                      <div className="absolute top-0 right-0 w-64 h-64 bg-[#c8956c]/[0.08] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-                      <div className="absolute bottom-0 left-0 w-40 h-40 bg-[#c8956c]/[0.05] rounded-full blur-2xl translate-y-1/2 pointer-events-none" />
+                    {/*
+                      ── Two-column on desktop, stacked on mobile ──
+                      Desktop: [dark left panel | cream right scroll]
+                      Mobile:  [dark header / cream body / footer]
+                    */}
+                    <div className="flex-1 min-h-0 flex flex-col lg:flex-row overflow-hidden rounded-t-3xl lg:rounded-2xl">
 
-                      {/* Close button */}
-                      <button
-                        onClick={() => setProductPopup(null)}
-                        className="absolute top-4 right-5 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white/80 hover:border-white/30 transition-all"
-                      >
-                        <X size={14} />
-                      </button>
+                      {/* ── LEFT / TOP: dark brand hero ── */}
+                      <div className="relative bg-[#2d2016] flex-shrink-0
+                        px-6 pt-5 pb-8
+                        lg:w-[38%] lg:flex lg:flex-col lg:justify-between lg:pt-10 lg:pb-10 lg:px-10
+                        rounded-t-3xl lg:rounded-none lg:rounded-l-2xl overflow-hidden">
 
-                      {/* Eyebrow */}
-                      <div className="flex items-center gap-2.5 mb-5">
-                        <span className="w-4 h-px bg-[#c8956c]" />
-                        <span className="text-[10px] font-semibold text-[#c8956c] uppercase tracking-[0.3em]">
-                          In your bundle
-                        </span>
-                      </div>
+                        {/* Decorative orbs */}
+                        <div className="absolute top-0 right-0 w-72 h-72 bg-[#c8956c]/[0.07] rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#c8956c]/[0.05] rounded-full blur-2xl translate-y-1/2 -translate-x-1/4 pointer-events-none" />
 
-                      {/* Product name */}
-                      <h3
-                        className="text-[22px] sm:text-2xl font-semibold text-[#fdf8f3] leading-snug mb-2 relative z-10"
-                        style={{ fontFamily: "var(--font-heading)" }}
-                      >
-                        {detail.name}
-                      </h3>
+                        {/* Diagonal grain texture overlay */}
+                        <div
+                          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                          style={{
+                            backgroundImage: "repeating-linear-gradient(45deg, #c8956c 0, #c8956c 1px, transparent 0, transparent 50%)",
+                            backgroundSize: "8px 8px",
+                          }}
+                        />
 
-                      {/* Tagline as italic quote */}
-                      <p
-                        className="text-sm text-[#c8956c]/80 italic relative z-10"
-                        style={{ fontFamily: "var(--font-heading)" }}
-                      >
-                        &ldquo;{detail.tagline}&rdquo;
-                      </p>
+                        {/* Close button — desktop top right, inside dark panel */}
+                        <button
+                          onClick={() => setProductPopup(null)}
+                          className="absolute top-4 right-4 lg:top-5 lg:right-5 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white/80 hover:border-white/30 transition-all z-10"
+                        >
+                          <X size={14} />
+                        </button>
 
-                      {/* Gold rule */}
-                      <div className="mt-6 flex items-center gap-3">
-                        <span className="h-px flex-1 bg-white/8" />
-                        <span className="w-1 h-1 rounded-full bg-[#c8956c]/50" />
-                        <span className="h-px flex-1 bg-white/8" />
-                      </div>
-                    </div>
-
-                    {/* ── Cream scrollable body ── */}
-                    <div
-                      className="flex-1 overflow-y-auto bg-[#fdf8f3] min-h-0"
-                      style={{ scrollbarWidth: "none" }}
-                    >
-                      <div className="px-6 py-6 space-y-6">
-
-                        {/* Description */}
-                        <p className="text-sm text-[#5a4635]/80 leading-[1.8]">
-                          {detail.description}
-                        </p>
-
-                        {/* ── Benefits ── */}
-                        <div>
-                          <div className="flex items-center gap-2 mb-4">
-                            <span className="text-[#c8956c] text-[11px]">◆</span>
-                            <h4 className="text-[10px] font-bold text-[#2d2016] uppercase tracking-[0.28em]">
-                              What it does
-                            </h4>
+                        {/* Content */}
+                        <div className="relative z-10">
+                          {/* Eyebrow */}
+                          <div className="flex items-center gap-2.5 mb-5 lg:mb-8">
+                            <span className="w-5 h-px bg-[#c8956c]" />
+                            <span className="text-[10px] font-semibold text-[#c8956c] uppercase tracking-[0.3em]">
+                              In your bundle
+                            </span>
                           </div>
-                          <div className="grid grid-cols-2 gap-2">
-                            {detail.benefits.map((b, i) => (
-                              <div
-                                key={b}
-                                className="group flex items-start gap-2.5 bg-white rounded-xl border border-[#f0e6d8] p-3 hover:border-[#c8956c]/30 hover:shadow-sm transition-all duration-200"
-                                style={{ animationDelay: `${i * 0.05}s` }}
-                              >
-                                <div className="w-4 h-4 rounded-full bg-[#c8956c]/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[#c8956c]/20 transition-colors">
-                                  <Check size={9} className="text-[#c8956c]" />
+
+                          {/* Product name */}
+                          <h3
+                            className="text-2xl lg:text-3xl font-semibold text-[#fdf8f3] leading-snug mb-3 lg:mb-4"
+                            style={{ fontFamily: "var(--font-heading)" }}
+                          >
+                            {detail.name}
+                          </h3>
+
+                          {/* Tagline */}
+                          
+                        </div>
+
+                        {/* Bottom rule — desktop only */}
+                        <div className="hidden lg:flex items-center gap-3 mt-10 relative z-10">
+                          <span className="h-px flex-1 bg-[#c8956c]/20" />
+                          <span className="text-[9px] text-[#c8956c]/40 uppercase tracking-[0.3em]">Dilisshious</span>
+                          <span className="h-px flex-1 bg-[#c8956c]/20" />
+                        </div>
+
+                        {/* Gold bottom rule — mobile only */}
+                        <div className="lg:hidden mt-6 flex items-center gap-3">
+                          <span className="h-px flex-1 bg-[#c8956c]/20" />
+                          <span className="w-1 h-1 rounded-full bg-[#c8956c]/50" />
+                          <span className="h-px flex-1 bg-[#c8956c]/20" />
+                        </div>
+                      </div>
+
+                      {/* ── RIGHT / BOTTOM: cream scrollable content ── */}
+                      <div className="flex-1 min-h-0 flex flex-col bg-[#fdf8f3] lg:rounded-r-2xl overflow-hidden">
+                        <div
+                          className="flex-1 overflow-y-auto min-h-0 px-6 py-6 lg:px-10 lg:py-8 space-y-6"
+                          style={{ scrollbarWidth: "none" }}
+                        >
+                          {/* Description */}
+                          <p className="text-sm text-[#5a4635]/80 leading-[1.85]">
+                            {detail.description}
+                          </p>
+
+                          {/* ── Benefits ── */}
+                          <div>
+                            <div className="flex items-center gap-2 mb-4">
+                              <span className="text-[#c8956c] text-[10px]">◆</span>
+                              <h4 className="text-[10px] font-bold text-[#2d2016] uppercase tracking-[0.28em]">
+                                What it does
+                              </h4>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              {detail.benefits.map((b) => (
+                                <div
+                                  key={b}
+                                  className="group flex items-start gap-2.5 bg-white rounded-xl border border-[#f0e6d8] p-3 hover:border-[#c8956c]/30 hover:shadow-sm transition-all duration-200"
+                                >
+                                  <div className="w-4 h-4 rounded-full bg-[#c8956c]/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[#c8956c]/20 transition-colors">
+                                    <Check size={9} className="text-[#c8956c]" />
+                                  </div>
+                                  <p className="text-[11px] text-[#5a4635] leading-snug font-medium">{b}</p>
                                 </div>
-                                <p className="text-[11px] text-[#5a4635] leading-snug font-medium">{b}</p>
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
+
+                          {/* ── Ingredients ── */}
+                          <div className="rounded-2xl border border-[#e8d5c0] overflow-hidden">
+                            <div className="flex items-center gap-2.5 bg-[#f5ebe0] px-4 py-3 border-b border-[#e8d5c0]">
+                              <Leaf size={13} className="text-[#c8956c]" />
+                              <h4 className="text-[10px] font-bold text-[#2d2016] uppercase tracking-[0.28em]">
+                                Ingredients
+                              </h4>
+                            </div>
+                            <div className="px-4 py-3.5 bg-white">
+                              <p className="text-xs text-[#5a4635]/75 leading-[1.85]">{detail.ingredients}</p>
+                            </div>
+                          </div>
+
+                          {/* ── How to use ── */}
+                          <div className="rounded-2xl border border-[#c8956c]/25 overflow-hidden">
+                            <div className="flex items-center gap-2.5 bg-[#2d2016] px-4 py-3">
+                              <Zap size={13} className="text-[#c8956c]" />
+                              <h4 className="text-[10px] font-bold text-[#fdf8f3]/80 uppercase tracking-[0.28em]">
+                                How to use
+                              </h4>
+                            </div>
+                            <div className="px-4 py-3.5 bg-[#fdf8f3]">
+                              <p className="text-xs text-[#5a4635] leading-[1.85]">{detail.howToUse}</p>
+                            </div>
+                          </div>
+
+                          <div className="h-2" />
                         </div>
 
-                        {/* ── Ingredients ── */}
-                        <div className="rounded-2xl border border-[#e8d5c0] overflow-hidden">
-                          <div className="flex items-center gap-2.5 bg-[#f5ebe0] px-4 py-3 border-b border-[#e8d5c0]">
-                            <Leaf size={13} className="text-[#c8956c]" />
-                            <h4 className="text-[10px] font-bold text-[#2d2016] uppercase tracking-[0.28em]">
-                              Ingredients
-                            </h4>
-                          </div>
-                          <div className="px-4 py-3.5 bg-white">
-                            <p className="text-xs text-[#5a4635]/75 leading-[1.85]">{detail.ingredients}</p>
-                          </div>
+                        {/* Sticky close footer */}
+                        <div className="flex-shrink-0 bg-white border-t border-[#f0e6d8] px-6 py-4 lg:px-10">
+                          <button
+                            onClick={() => setProductPopup(null)}
+                            className="w-full py-3.5 bg-[#2d2016] text-[#fdf8f3] text-sm font-semibold rounded-full hover:bg-[#5a4635] active:scale-[0.98] transition-all duration-300 tracking-wide"
+                          >
+                            Close
+                          </button>
                         </div>
-
-                        {/* ── How to use ── */}
-                        <div className="rounded-2xl border border-[#c8956c]/25 overflow-hidden">
-                          <div className="flex items-center gap-2.5 bg-[#2d2016] px-4 py-3">
-                            <Zap size={13} className="text-[#c8956c]" />
-                            <h4 className="text-[10px] font-bold text-[#fdf8f3]/80 uppercase tracking-[0.28em]">
-                              How to use
-                            </h4>
-                          </div>
-                          <div className="px-4 py-3.5 bg-[#fdf8f3]">
-                            <p className="text-xs text-[#5a4635] leading-[1.85]">{detail.howToUse}</p>
-                          </div>
-                        </div>
-
-                        {/* Bottom breathing room */}
-                        <div className="h-2" />
                       </div>
-                    </div>
-
-                    {/* ── Sticky footer ── */}
-                    <div className="flex-shrink-0 bg-white border-t border-[#f0e6d8] px-6 py-4">
-                      <button
-                        onClick={() => setProductPopup(null)}
-                        className="w-full py-3.5 bg-[#2d2016] text-[#fdf8f3] text-sm font-semibold rounded-full hover:bg-[#5a4635] active:scale-[0.98] transition-all duration-300 tracking-wide"
-                      >
-                        Close
-                      </button>
                     </div>
                   </div>
 
                   <style>{`
-                    @keyframes drawerSlideUp {
-                      from { transform: translateY(100%); opacity: 0.6; }
+                    @keyframes productDrawerIn {
+                      from { transform: translateY(100%); opacity: 0.7; }
                       to   { transform: translateY(0);    opacity: 1; }
+                    }
+                    @media (min-width: 1024px) {
+                      @keyframes productDrawerIn {
+                        from { transform: translateY(24px) scale(0.97); opacity: 0; }
+                        to   { transform: translateY(0)    scale(1);    opacity: 1; }
+                      }
                     }
                   `}</style>
                 </div>

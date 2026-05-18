@@ -42,6 +42,18 @@ Connection cached in `lib/db/mongoose.ts`. Models in `lib/db/models/`:
 - **QuizResult** — userId (unique), quiz answers object, recommended bundle ID, timestamps
 - **Subscription** — userId, bundleId/Name, planId/Name, frequency, bundlePrice, addOns array, total, status (active/paused/cancelled)
 
+### Product Data Shape
+Products in `public/data/products.json` (and MongoDB) have these fields: `slug`, `name`, `tagline`, `category`, `image`, `volumes[]` (label/price/originalPrice/_id), `description`, `ingredients`, `howToEnjoy`, `storage`, `bestBefore`, `deliveryDetails`, `tags[]`, `badge` ("Bestseller" | "Fresh" | "").
+
+Categories in use: `Podi · Condiments`, `Dessert Jars`, `Spreads · Sauces`, `Bars · Snacks`, `Baked · Breads`, `Breakfast`, `Cookies`.
+
+### Homepage Sections
+Rendered in `app/page.tsx` via components in `components/sections/`:
+- `HeroSection` — above the fold
+- `DeliveryBanner` — animated marquee ticker (dark brand bg, multiple rotating messages about delivery days, coupon, free shipping). Messages are defined as an array inside the component.
+- `ProductsSection` + `ProductsFilter` — category tabs (All / Best Sellers / New Arrivals / per-category) with overflow "More" dropdown
+- `AboutSection`, `ProcessSection`, `TestimonialsSection`
+
 Server actions in `lib/db/actions/` (user-actions.ts, order-actions.ts).
 
 ### Checkout Flow
@@ -51,6 +63,8 @@ Payments are UPI-only with manual screenshot verification (no payment gateway).
 
 ### Health Quiz (Root Cause Protocol)
 6-question onboarding quiz at `/quiz` that recommends a personalised subscription bundle. Self-contained component in `components/root-cause-quiz.tsx` — all questions, bundles, pricing, routing logic, and the result screen live inside it. Four bundles: GRV (gut), HHB (hormones), GFW (skin), PVP (energy). Three plans: 1-Week Trial, Bi-Weekly, Monthly. Optional add-ons.
+
+The result screen includes a product popup (triggered per bundle product) — mobile: full-width bottom drawer; desktop: centred two-column card (dark brand panel left, cream scrollable detail right). Animation keyframe is `productDrawerIn`.
 
 First-visit redirect: `FirstVisitRedirect` in `client-layout.tsx` checks `localStorage("dilisshious-quiz-seen")` — if absent, redirects to `/quiz`. Guest results stored in `localStorage("dilisshious-quiz-result")`; logged-in results saved to DB via `/api/quiz-result`. `QuizResultSyncer` in `auth-context.tsx` copies localStorage result to DB on login.
 

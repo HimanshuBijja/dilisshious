@@ -229,6 +229,78 @@
     "badge": ""
   },
   {
+    "slug": "chia-seed-bowl",
+    "name": "Chia Seed Bowl (V/GF) — Customisable",
+    "tagline": "Build your bowl. Fuel your morning.",
+    "category": "Breakfast",
+    "image": "/images/chia-seed-bowl.jpg",
+    "volumes": [
+      {
+        "label": "Base Bowl",
+        "price": 280,
+        "_id": "69b242e62cb1123466993820"
+      },
+      {
+        "label": "Bowl + Acai Boost",
+        "price": 380,
+        "_id": "69b242e62cb1123466993821"
+      },
+      {
+        "label": "Bowl + Protein Add-on",
+        "price": 380,
+        "_id": "69b242e62cb1123466993822"
+      },
+      {
+        "label": "Builder's Bowl (Acai + Granola + Protein)",
+        "price": 520,
+        "_id": "69b242e62cb1123466993823"
+      }
+    ],
+    "description": "A nourishing chia seed pudding base — your choice of coconut, almond, or oat milk — layered and customised exactly the way you like it. Choose your Acai Boost (Açaí, Mango, Piña Colada, or Berry Blend), your granola (Cinnamon Spice or Dark Chocolate), your sweetener (Honey, Date Syrup, Maple Syrup, or Allulose for diabetic-friendly), and your protein (Collagen Peptides, Plant Protein, Whey Protein, Greek Yoghurt, or Hemp Seeds). Your morning, your rules.",
+    "ingredients": "Chia seeds, coconut/almond/oat milk (your choice), natural sweetener (your choice). Add-ons as selected: Açaí blend, Mango, Piña Colada, or Berry Blend; Granola (Cinnamon Spice or Dark Chocolate); Protein (Collagen Peptides, Plant Protein, Whey Protein, Greek Yoghurt, or Hemp Seeds).",
+    "howToEnjoy": "Served chilled. Eat slowly and let the layers speak for themselves. Best enjoyed as a morning ritual or post-workout refuel. Note your add-on preferences in the order remarks.",
+    "storage": "Refrigerate at all times. Best consumed within 24 hours of preparation.",
+    "bestBefore": "24 hours from preparation",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed. Perishable — handle with care.",
+    "tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Customisable",
+      "Diabetic-Friendly Options"
+    ],
+    "badge": "Fresh"
+  },
+  {
+    "slug": "dreamy-focaccia",
+    "name": "Dreamy Focaccia with Herbs, Olives & Cherry Tomatoes",
+    "tagline": "Dimpled, golden, unapologetically good.",
+    "category": "Baked · Breads",
+    "image": "/images/dreamy-focaccia.jpg",
+    "volumes": [
+      {
+        "label": "Half Slab",
+        "price": 280,
+        "_id": "69b242e62cb1123466993830"
+      },
+      {
+        "label": "Whole Slab",
+        "price": 520,
+        "_id": "69b242e62cb1123466993831"
+      }
+    ],
+    "description": "Thick, pillowy, and golden — our focaccia is made the way it deserves to be. Fragrant rosemary and flaky sea salt pressed into dimpled dough, finished with Kalamata olives, juicy cherry tomatoes, and a scattering of fresh basil. Crisp at the edges, cloud-soft inside. Dimpled, golden, unapologetically good.",
+    "ingredients": "Artisan bread flour, extra virgin olive oil, rosemary, flaky sea salt, Kalamata olives, cherry tomatoes, fresh basil, yeast, water.",
+    "howToEnjoy": "Tear and share. Dip into olive oil and balsamic. Serve alongside soups and salads. Or just eat it warm from the oven — no explanations needed.",
+    "storage": "Best enjoyed fresh. Store at room temperature wrapped in a cloth for up to 2 days.",
+    "bestBefore": "2 days from date of baking",
+    "deliveryDetails": "Delivery in Hyderabad on Wednesday & Sunday. 10% discount on first time orders — use coupon code: First10. Delivery via Uber Courier once order is confirmed.",
+    "tags": [
+      "Fresh Baked",
+      "Vegetarian"
+    ],
+    "badge": "Fresh"
+  },
+  {
     "slug": "gourmet-brown-butter-cookies",
     "name": "Gourmet Brown Butter Cookies",
     "tagline": "Crisp edges. Soft centre. Worth every bite.",
